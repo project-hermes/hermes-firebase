@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes</title>
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- reference Moment.js library -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+  <script src="/__/firebase/4.11.0/firebase.js"></script>
+  <script src="/__/firebase/4.10.1/firebase-app.js"></script>
+  <script src="/__/firebase/4.11.0/firebase-firestore.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <table id="data" class="table">
+      <thead>
+        <tr>
+          <th>time</th>
+          <th>value</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container">
+    <canvas id="myChart" width="400" height="150"></canvas>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var config = {
+        apiKey: "AIzaSyDTsjfwJsoAFG2xaTXquPjawyjpaypGHiU",
+        authDomain: "project-hermes-6c5cb.firebaseapp.com",
+        databaseURL: "https://project-hermes-6c5cb.firebaseio.com",
+        projectId: "project-hermes-6c5cb",
+        storageBucket: "project-hermes-6c5cb.appspot.com",
+        messagingSenderId: "185837078935"
+      };
+      var app = firebase.initializeApp(config);
+      var db = firebase.firestore();
+      var table = document.getElementById('data');
+      db.collection("hermes1").get().then((querySnapshot) => {
+        let vals = [];
+        let labes = [];
+        querySnapshot.forEach((doc) => {
+          let row = table.insertRow();
+          vals.push(parseInt(doc.data().data));
+          labes.push(moment.unix(doc.id).format("H:mm:ss"));
+          row.insertCell(0).innerHTML = moment.unix(doc.id).format("dddd, MMMM Do YYYY, h:mm:ss a");
+          row.insertCell(1).innerHTML = doc.data().data;
+        });
+        console.log(labes);
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var mychart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labes,
+            datasets: [{
+              label: 'Data',
+              data: vals,
+              fill: false,
+              borderColor: "#3e95cd",
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
