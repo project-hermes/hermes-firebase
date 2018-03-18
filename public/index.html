@@ -134,6 +134,7 @@
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
         }).addTo(mymap);
+        mymap.scrollWheelZoom.disable();
         var marker = L.marker([25.188872, -80.347362]).addTo(mymap);
         db.collection("hermes1").get().then((querySnapshot) => {
           let vals = [];
