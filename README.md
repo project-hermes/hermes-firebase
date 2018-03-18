@@ -6,3 +6,11 @@
 [![Dependencies](https://david-dm.org/sonyccd/hermes-firebase.svg)](https://david-dm.org/sonyccd/hermes-firebase)
 
 Firebase code for project hermes
+
+## To devel
+
+```
+$ npm install -g firebase-tools
+$ firebase serve   # Start development server
+$ firebase deploy  # Deploy new version of everything
+```
