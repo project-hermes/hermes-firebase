@@ -24,7 +24,6 @@ All data is layed out in Google Firestore document databse
         "s2d4t6rdw46yew3f": {
             "Name": "hermes1",
             "Id": 12334,
-            "SimID": 12345,
             "FirmwareV": 0.05,
             "BuildV": 0.01,
             "LastUpdate": 1543742463,
