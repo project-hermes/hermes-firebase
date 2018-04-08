@@ -147,9 +147,9 @@
       <a class="mdl-navigation__link is-active hm-signed-in-only" href="/"><i class="material-icons">home</i> Home</a>
       <a class="mdl-navigation__link" href="/feed"><i class="material-icons">trending_up</i> Feed</a>
       <hr />
-      <a class="mdl-navigation__link" href="/about"><i class="material-icons">perm_contact_calendar</i> About - Help - Contact</a>
+      <a class="mdl-navigation__link" href="/about"><i class="material-icons">perm_contact_calendar</i>About</a>
       <hr />
-      <a class="mdl-navigation__link" href="/terms"><i class="material-icons">format_list_numbered</i> Terms of Services</a>
+      <a class="mdl-navigation__link" href="/help"><i class="material-icons">format_list_numbered</i>Help</a>
       <hr class="hm-signed-in-only"/>
       <a class="hm-sign-out mdl-navigation__link hm-signed-in-only"><i class="material-icons">exit_to_app</i> Sign out</a>
       <a class="hm-delete-account mdl-navigation__link hm-signed-in-only"><i class="material-icons">cancel</i> Delete account</a>
@@ -158,25 +158,25 @@
 
   <main class="mdl-layout__content mdl-color--grey-100">
 
-    <!-- Show a feed of posts -->
+    <!-- Show a feed of dives -->
     <section id="page-feed" class="mdl-grid hm-content" style="display: none;">
-      <div class="hm-new-posts-button">
+      <div class="hm-new-dives-button">
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400">
-          Show new posts...
+          Show new dives...
         </button>
       </div>
       <div class="hm-image-container mdl-cell mdl-cell--12-col mdl-grid">
-        <div class="hm-no-posts hm-help mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+        <div class="hm-no-dives hm-help mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
                     mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing">
            <div class="mdl-card__supporting-text mdl-color-text--grey-600">
              <i class="hm-info material-icons">help</i>
              <div>
-               <p>Start following people to see their posts!</p>
+               <p>Start following people to see their dives!</p>
                <p>
                  Use the <strong><i class="material-icons">search</i> search bar</strong> to find people you know and have
                  a look at the <a href="/feed"><i class="material-icons">trending_up</i> feed</a> to discover interesting people.
                </p>
-               <p>Then <i class="material-icons">favorite</i> like and comment their posts!</p>
+               <p>Then <i class="material-icons">favorite</i> like and comment their dives!</p>
                </div>
            </div>
         </div>
@@ -188,8 +188,8 @@
       </div>
     </section>
 
-    <!-- Show a single post with comments -->
-    <section id="page-post" class="mdl-grid hm-content" style="display: none;">
+    <!-- Show a single dive with comments -->
+    <section id="page-dive" class="mdl-grid hm-content" style="display: none;">
       <div class="hm-image-container mdl-cell mdl-cell--12-col mdl-grid"></div>
     </section>
 
@@ -201,7 +201,7 @@
           <i class="hm-info material-icons">info</i>
           <div>
             <p>hermesapp is a  photo sharing app showcasing the use of the <a href="https://firebase.google.com">Firebase Platform</a>.</p>
-            <p>This application is meant as a sample application for developers, avoid posting private or personal data.</p>
+            <p>This application is meant as a sample application for developers, avoid diveing private or personal data.</p>
           </div>
         </div>
       </div>
@@ -214,12 +214,12 @@
         <div class="mdl-card__supporting-text mdl-color-text--grey-600">
           <i class="hm-info material-icons">help</i>
           <div>
-            <p>Start following people to see their posts in your <a href="/"><i class="material-icons">home</i>home</a>!</p>
+            <p>Start following people to see their dives in your <a href="/"><i class="material-icons">home</i>home</a>!</p>
             <p>
               Use the <strong><i class="material-icons">search</i>search bar</strong> to find people you know and have
               a look at the <a href="/feed"><i class="material-icons">trending_up</i>feed</a> to discover interesting people.
             </p>
-            <p>Then <i class="material-icons">favorite</i>like and comment their posts!</p>
+            <p>Then <i class="material-icons">favorite</i>like and comment their dives!</p>
             <p>
               Share your pics with your friends using the <i class="material-icons">file_upload</i>or <i class="material-icons">photo_camera</i>buttons.
             </p>
@@ -249,7 +249,7 @@
             </label>
           </div>
           <div class="hm-user-detail-container">
-            <div class="hm-user-detail"><span class="hm-user-nbposts">0</span> posts</div>
+            <div class="hm-user-detail"><span class="hm-user-nbdives">0</span> dives</div>
             <div class="hm-user-detail"><span class="hm-user-nbfollowers">0</span> followers</div>
             <div class="hm-user-detail hm-user-nbfollowing-container"><span class="hm-user-nbfollowing">0</span> following</div>
           </div>
@@ -261,10 +261,10 @@
         </button>
       </div>
       <div class="hm-image-container mdl-cell mdl-cell--12-col mdl-grid">
-        <div class="hm-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
+        <div class="hm-no-dives mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
           <div class="mdl-card mdl-shadow--2dp mdl-cell
                   mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
-            No posts yet.
+            No dives yet.
           </div>
         </div>
       </div>
@@ -275,7 +275,7 @@
       </div>
     </section>
 
-    <!-- Post new pic page -->
+    <!-- Post new dive page -->
     <section id="page-add" class="mdl-grid hm-content" style="display: none;">
       <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid mdl-grid--no-spacing">
         <div class="hm-addcontainer mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
@@ -359,7 +359,7 @@
 <script src="/scripts-es5/uploader.js"></script>
 <script src="/scripts-es5/messaging.js"></script>
 <script src="/scripts-es5/userpage.js"></script>
-<script src="/scripts-es5/post.js"></script>
+<script src="/scripts-es5/dive.js"></script>
 <script src="/scripts-es5/feed.js"></script>
 <script src="/scripts-es5/routing.js"></script>
 
