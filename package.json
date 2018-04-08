@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "animate.css": "^3.6.1",
     "fontawesome": "^4.7.2"
   }
 }
