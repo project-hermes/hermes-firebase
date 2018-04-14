@@ -1799,4 +1799,6 @@ declare namespace firebase.firestore {
   }
 }
 
-export = firebase;
+declare module 'firebase' {
+  export = firebase;
+}
