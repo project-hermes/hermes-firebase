@@ -12,7 +12,6 @@
     "realtime",
     "database",
     "storage",
-    "firestore",
     "authentication"
   ],
   "license": "https://developers.google.com/terms",

@@ -36,3 +36,8 @@ exports.helloPubSub = functions.pubsub.topic('test').onPublish((event) => {
     }
     return 0;
 });
+
+exports.dataInjestion = functions.pubsub.topic('test-hermes2').onPublish((event) => {
+  console.log(event.data);
+  return 0;
+});
