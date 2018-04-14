@@ -8,6 +8,17 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     response.send("Hello from Firebase!");
 });
 
+exports.testDarkSky = functions.https.onRequest((request, response) => {
+  var data;
+  req('https://api.darksky.net/forecast/0572265ceb918ccb26859277f09bde18/35.777489, -78.633157,255657600', (error, resp, body) => {
+    console.log('error:', error);
+    console.log('statusCode:', resp && resp.statusCode);
+    data = JSON.parse(body);
+  });
+  response.send(data);
+});
+
+
 exports.helloPubSub = functions.pubsub.topic('test').onPublish((event) => {
     var db = admin.firestore();
     var now = moment().unix();
