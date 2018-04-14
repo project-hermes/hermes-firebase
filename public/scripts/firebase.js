@@ -35,7 +35,7 @@ hermesApp.Firebase = class {
    */
   constructor() {
     // Firebase SDK.
-    this.database = firebase.firestore();
+    this.database = firebase.database();
     this.storage = firebase.storage();
     this.auth = firebase.auth();
 
