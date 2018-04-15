@@ -35,7 +35,7 @@ hermesApp.Firebase = function () {_createClass(_class, null, [{ key: 'DIVES_PAGE
        */ }]);
   function _class() {_classCallCheck(this, _class);
     // Firebase SDK.
-    this.database = firebase.database();
+    this.database = firebase.firestore();
     this.storage = firebase.storage();
     this.auth = firebase.auth();
 
@@ -364,7 +364,8 @@ hermesApp.Firebase = function () {_createClass(_class, null, [{ key: 'DIVES_PAGE
        * Fetches a single dive data.
        */ }, { key: 'getDiveData', value: function getDiveData(
     diveId) {
-      return this.database.ref('/dives/' + diveId).once('value');
+      //return this.database.ref(`/dives/${diveId}`).once('value');
+      return this.database.collection('dives').doc('' + diveId);
     }
 
     /**

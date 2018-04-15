@@ -33,7 +33,7 @@ hermesApp.Dive = class {
    * Loads the given dive's details.
    */
   loadDive(diveId) {
-    // Load the dives information.
+/*    // Load the dives information.
     hermesApp.firebase.getDiveData(diveId).then(snapshot => {
       const dive = snapshot.val();
       // Clear listeners and previous dive data.
@@ -53,6 +53,20 @@ hermesApp.Dive = class {
         this.fillDiveData(snapshot.key, dive.thumb_url || dive.url, dive.text, dive.author,
             dive.timestamp, dive.thumb_storage_uri, dive.full_storage_uri, dive.full_url);
       }
+    });*/
+    hermesApp.firebase.getDiveData(diveId).get().then(function (doc) {
+      if (doc.exists) {
+        this.fillDiveData(diveId);
+      } else {
+        console.error(`Dive ${diveId} does not exist`);
+        if(this.auth.currentUser) {
+          page(`/usr/${this.auth.currentUser.uid}`);
+        } else {
+          page(`/feed`);
+        }
+      }
+    }).catch(function(error) {
+      console.log("Error getting dive:", error);
     });
   }
 

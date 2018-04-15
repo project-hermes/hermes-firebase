@@ -35,7 +35,7 @@ hermesApp.Firebase = class {
    */
   constructor() {
     // Firebase SDK.
-    this.database = firebase.database();
+    this.database = firebase.firestore();
     this.storage = firebase.storage();
     this.auth = firebase.auth();
 
@@ -364,7 +364,8 @@ hermesApp.Firebase = class {
    * Fetches a single dive data.
    */
   getDiveData(diveId) {
-    return this.database.ref(`/dives/${diveId}`).once('value');
+    //return this.database.ref(`/dives/${diveId}`).once('value');
+    return this.database.collection('dives').doc(`${diveId}`);
   }
 
   /**

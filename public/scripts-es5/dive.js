@@ -32,27 +32,41 @@ hermesApp.Dive = function () {
   /**
      * Loads the given dive's details.
      */_createClass(_class, [{ key: 'loadDive', value: function loadDive(
-    diveId) {var _this2 = this;
-      // Load the dives information.
-      hermesApp.firebase.getDiveData(diveId).then(function (snapshot) {
-        var dive = snapshot.val();
-        // Clear listeners and previous dive data.
-        _this2.clear();
-        if (!dive) {
-          var data = {
-            message: 'This dive does not exists.',
-            timeout: 5000 };
-
-          _this2.toast[0].MaterialSnackbar.showSnackbar(data);
-          if (_this2.auth.currentUser) {
-            page('/user/' + _this2.auth.currentUser.uid);
+    diveId) {
+      /*    // Load the dives information.
+                 hermesApp.firebase.getDiveData(diveId).then(snapshot => {
+                   const dive = snapshot.val();
+                   // Clear listeners and previous dive data.
+                   this.clear();
+                   if (!dive) {
+                     const data = {
+                       message: 'This dive does not exists.',
+                       timeout: 5000
+                     };
+                     this.toast[0].MaterialSnackbar.showSnackbar(data);
+                     if (this.auth.currentUser) {
+                       page(`/user/${this.auth.currentUser.uid}`);
+                     } else {
+                       page(`/feed`);
+                     }
+                   } else {
+                     this.fillDiveData(snapshot.key, dive.thumb_url || dive.url, dive.text, dive.author,
+                         dive.timestamp, dive.thumb_storage_uri, dive.full_storage_uri, dive.full_url);
+                   }
+                 });*/
+      hermesApp.firebase.getDiveData(diveId).get().then(function (doc) {
+        if (doc.exists) {
+          this.fillDiveData(diveId);
+        } else {
+          console.error('Dive ' + diveId + ' does not exist');
+          if (this.auth.currentUser) {
+            page('/usr/' + this.auth.currentUser.uid);
           } else {
             page('/feed');
           }
-        } else {
-          _this2.fillDiveData(snapshot.key, dive.thumb_url || dive.url, dive.text, dive.author,
-          dive.timestamp, dive.thumb_storage_uri, dive.full_storage_uri, dive.full_url);
         }
+      }).catch(function (error) {
+        console.log("Error getting dive:", error);
       });
     }
 
@@ -81,7 +95,7 @@ hermesApp.Dive = function () {
     /**
        * Displays a single comment or replace the existing one with new content.
        */ }, { key: 'displayComment', value: function displayComment(
-    comment, diveId, commentId) {var _this3 = this;var prepend = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+    comment, diveId, commentId) {var _this2 = this;var prepend = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
       var newElement = this.createComment(comment.author, comment.text, diveId,
       commentId, comment.author.uid === hermesApp.auth.userId);
       if (prepend) {
@@ -95,7 +109,7 @@ hermesApp.Dive = function () {
       hermesApp.firebase.subscribeToComment(diveId, commentId, function (snap) {
         var updatedComment = snap.val();
         if (updatedComment) {
-          var updatedElement = _this3.createComment(updatedComment.author,
+          var updatedElement = _this2.createComment(updatedComment.author,
           updatedComment.text, diveId, commentId,
           updatedComment.author.uid === hermesApp.auth.userId);
           var element = $('#comment-' + commentId);
@@ -103,7 +117,7 @@ hermesApp.Dive = function () {
         } else {
           $('#comment-' + commentId).remove();
         }
-        hermesApp.MaterialUtils.upgradeDropdowns(_this3.diveElement);
+        hermesApp.MaterialUtils.upgradeDropdowns(_this2.diveElement);
       });
     }
 
@@ -111,7 +125,7 @@ hermesApp.Dive = function () {
        * Shows the "show more comments" button and binds it the `nextPage` callback. If `nextPage` is
        * `null` then the button is hidden.
        */ }, { key: 'displayNextPageButton', value: function displayNextPageButton(
-    diveId, nextPage) {var _this4 = this;
+    diveId, nextPage) {var _this3 = this;
       var nextPageButton = $('.hm-morecomments', this.diveElement);
       if (nextPage) {
         nextPageButton.show();
@@ -119,8 +133,8 @@ hermesApp.Dive = function () {
         nextPageButton.prop('disabled', false);
         nextPageButton.click(function () {return nextPage().then(function (data) {
             nextPageButton.prop('disabled', true);
-            _this4.displayComments(diveId, data.entries);
-            _this4.displayNextPageButton(diveId, data.nextPage);
+            _this3.displayComments(diveId, data.entries);
+            _this3.displayNextPageButton(diveId, data.nextPage);
           });});
       } else {
         nextPageButton.hide();
@@ -131,7 +145,7 @@ hermesApp.Dive = function () {
        * Fills the dive's Card with the given details.
        * Also sets all auto updates and listeners on the UI elements of the dive.
        */ }, { key: 'fillDiveData', value: function fillDiveData(
-    diveId, thumbUrl, imageText) {var author = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};var timestamp = arguments[4];var thumbStorageUri = arguments[5];var _this5 = this;var picStorageUri = arguments[6];var picUrl = arguments[7];
+    diveId, thumbUrl, imageText) {var author = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};var timestamp = arguments[4];var thumbStorageUri = arguments[5];var _this4 = this;var picStorageUri = arguments[6];var picUrl = arguments[7];
       var dive = this.diveElement;
 
       hermesApp.MaterialUtils.upgradeDropdowns(this.diveElement);
@@ -147,7 +161,7 @@ hermesApp.Dive = function () {
 
       // Make sure we update if the thumb or pic URL changes.
       hermesApp.firebase.registerForThumbChanges(diveId, function (thumbUrl) {
-        _this5._setupThumb(thumbUrl, picUrl);
+        _this4._setupThumb(thumbUrl, picUrl);
       });
 
       this._setupDate(diveId, timestamp);
@@ -170,16 +184,16 @@ hermesApp.Dive = function () {
     /**
        * Leaves the theatre mode.
        */ }, { key: 'enterTheatreMode', value: function enterTheatreMode(
-    picUrl) {var _this6 = this;
+    picUrl) {var _this5 = this;
       $('.hm-fullpic', this.theatre).prop('src', picUrl);
       this.theatre.css('display', 'flex');
       // Leave theatre mode if click or ESC key down.
       this.theatre.off('click');
-      this.theatre.click(function () {return _this6.leaveTheatreMode();});
+      this.theatre.click(function () {return _this5.leaveTheatreMode();});
       $(document).off('keydown');
       $(document).keydown(function (e) {
         if (e.which === 27) {
-          _this6.leaveTheatreMode();
+          _this5.leaveTheatreMode();
         }
       });
     }
@@ -188,12 +202,12 @@ hermesApp.Dive = function () {
        * Shows the thumbnail and sets up the click to see the full size image.
        * @private
        */ }, { key: '_setupThumb', value: function _setupThumb(
-    thumbUrl, picUrl) {var _this7 = this;
+    thumbUrl, picUrl) {var _this6 = this;
       var dive = this.diveElement;
 
       $('.hm-image', dive).css('background-image', 'url("' + (thumbUrl ? thumbUrl.replace(/"/g, '\\"') : '') + '")');
       $('.hm-image', dive).unbind('click');
-      $('.hm-image', dive).click(function () {return _this7.enterTheatreMode(picUrl || thumbUrl);});
+      $('.hm-image', dive).click(function () {return _this6.enterTheatreMode(picUrl || thumbUrl);});
     }
 
     /**
@@ -214,7 +228,7 @@ hermesApp.Dive = function () {
        * Shows comments and binds actions to the comments form.
        * @private
        */ }, { key: '_setupComments', value: function _setupComments(
-    diveId, author, imageText) {var _this8 = this;
+    diveId, author, imageText) {var _this7 = this;
       var dive = this.diveElement;
 
       // Creates the initial comment with the dive's text.
@@ -224,13 +238,13 @@ hermesApp.Dive = function () {
       // Load first page of comments and listen to new comments.
       hermesApp.firebase.getComments(diveId).then(function (data) {
         $('.hm-comments', dive).empty();
-        _this8.displayComments(diveId, data.entries);
-        _this8.displayNextPageButton(diveId, data.nextPage);
+        _this7.displayComments(diveId, data.entries);
+        _this7.displayNextPageButton(diveId, data.nextPage);
 
         // Display any new comments.
         var commentIds = Object.keys(data.entries);
         hermesApp.firebase.subscribeToComments(diveId, function (commentId, commentData) {
-          _this8.displayComment(commentData, diveId, commentId, false);
+          _this7.displayComment(commentData, diveId, commentId, false);
         }, commentIds ? commentIds[commentIds.length - 1] : 0);
       });
 
@@ -258,7 +272,7 @@ hermesApp.Dive = function () {
        * Binds the action to the report button.
        * @private
        */ }, { key: '_setupReportButton', value: function _setupReportButton(
-    diveId) {var _this9 = this;
+    diveId) {var _this8 = this;
       var dive = this.diveElement;
 
       if (this.auth.currentUser) {
@@ -292,7 +306,7 @@ hermesApp.Dive = function () {
                 message: 'There was an error reporting your dive: ' + error,
                 timeout: 5000 };
 
-              _this9.toast[0].MaterialSnackbar.showSnackbar(data);
+              _this8.toast[0].MaterialSnackbar.showSnackbar(data);
             });
           });
         });
@@ -303,7 +317,7 @@ hermesApp.Dive = function () {
        * Shows/Hide and binds actions to the Delete button.
        * @private
        */ }, { key: '_setupDeleteButton', value: function _setupDeleteButton(
-    diveId) {var author = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var _this10 = this;var picStorageUri = arguments[2];var thumbStorageUri = arguments[3];
+    diveId) {var author = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var _this9 = this;var picStorageUri = arguments[2];var thumbStorageUri = arguments[3];
       var dive = this.diveElement;
 
       if (this.auth.currentUser && this.auth.currentUser.uid === author.uid) {
@@ -334,7 +348,7 @@ hermesApp.Dive = function () {
               timer: 2000 });
 
             $('.hm-delete-dive', dive).prop('disabled', false);
-            page('/user/' + _this10.auth.currentUser.uid);
+            page('/user/' + _this9.auth.currentUser.uid);
           }).catch(function (error) {
             swal.close();
             $('.hm-delete-dive', dive).prop('disabled', false);
@@ -342,7 +356,7 @@ hermesApp.Dive = function () {
               message: 'There was an error deleting your dive: ' + error,
               timeout: 5000 };
 
-            _this10.toast[0].MaterialSnackbar.showSnackbar(data);
+            _this9.toast[0].MaterialSnackbar.showSnackbar(data);
           });
         });
       });

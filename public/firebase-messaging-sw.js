@@ -3,6 +3,7 @@
 // If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup
 importScripts('/__/firebase/4.12.1/firebase-app.js');
 importScripts('/__/firebase/4.12.1/firebase-messaging.js');
+importScripts('/__/firebase/4.12.1/firebase-firestore.js');
 importScripts('/__/firebase/init.js');
 
 firebase.messaging();
