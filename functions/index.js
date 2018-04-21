@@ -49,32 +49,27 @@ exports.sensorCreate = functions.pubsub.topic('sensorCreate').onPublish((event) 
 exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
   console.log('Creating dive');
   let db = admin.firestore();
-  let sensorId = event.data.attributes.device_id;
-  let rawData = String(atob(event.data.data));
-  console.log(`Raw Data: ${rawData}`);
-
-  let diveData = rawData.substring(2).split(" ").map(item => {
-    return parseInt(item, 10);
-  });
+  let rawData = String(atob(event.data));
+  let sensorId = event.attributes.device_id;
+  let diveData = rawData.split(" ");
 
   let dive = {
-    version: rawData.substring(0,1),
+    version: diveData[0],
     sensorId: sensorId,
-    sensorDiveId: rawData.substring(1,2),
+    sensorDiveId: diveData[1],
     createdAt: new Date(),
-    coordinateStart: new admin.firestore.GeoPoint(diveData[0], diveData[1]),
-    coordinateEnd: new admin.firestore.GeoPoint(diveData[2], diveData[3]),
-    sampleCount: diveData[4],
-    timeStart: new Date(diveData[5]),
-    timeEnd: new Date(diveData[6])
+    coordinateStart: new admin.firestore.GeoPoint(parseFloat(diveData[2]), parseFloat(diveData[3])),
+    coordinateEnd: new admin.firestore.GeoPoint(parseFloat(diveData[4]), parseFloat(diveData[5])),
+    sampleCount: parseInt(diveData[6]),
+    timeStart: new Date(parseInt(diveData[7])*1000),
+    timeEnd: new Date(parseInt(diveData[8])*1000)
   };
 
   db.collection('Dive').add(dive).then(ref => {
     console.log(`Dive ${ref.id} written`);
-
     return 0;
   }).catch(error => {
-    console.error(`Error creating dive with error ${error} raw data ${rawData}`);
+    console.error(`Error creating dive with error ${error} raw data ${event.data} attributes ${event.attributes.toString()}`);
     return -1;
   });
 
@@ -83,11 +78,21 @@ exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
 
 exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
   console.log('Appending dive');
+  let db = admin.firestore();
+  let sensorId = event.data.attributes.device_id;
+  let rawData = String(atob(event.data.data));
+  console.log(`Raw Data: ${rawData}`);
+
   return 0;
 });
 
 exports.diveDone = functions.pubsub.topic('diveDone').onPublish((event) => {
   console.log('Closing out dive');
+  let db = admin.firestore();
+  let sensorId = event.data.attributes.device_id;
+  let rawData = String(atob(event.data.data));
+  console.log(`Raw Data: ${rawData}`);
+
   return 0;
 });
 
