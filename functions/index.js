@@ -32,6 +32,7 @@ exports.sensorCreate = functions.pubsub.topic('sensorCreate').onPublish((event) 
   let sensor = {
     version: rawData.substring(0,1),
     lastUpdated: new Date()
+
   };
 
   db.collection('Sensor').doc(sensorId).set(sensor).then(()=>{
@@ -59,6 +60,7 @@ exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
   let dive = {
     sensorId: sensorId,
     version: rawData.substring(0,1),
+    createdAt: new Date(),
     coordinateStart: new admin.firestore.GeoPoint(diveData[0], diveData[1]),
     coordinateEnd: new admin.firestore.GeoPoint(diveData[2], diveData[3]),
     dataCount: diveData[4],
