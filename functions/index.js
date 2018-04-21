@@ -79,8 +79,8 @@ exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
 exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
   console.log('Appending dive');
   let db = admin.firestore();
-  let sensorId = event.data.attributes.device_id;
-  let rawData = String(atob(event.data.data));
+  let sensorId = event.attributes.device_id;
+  let rawData = String(atob(event.data));
   console.log(`Raw Data: ${rawData}`);
 
   return 0;
@@ -89,8 +89,8 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
 exports.diveDone = functions.pubsub.topic('diveDone').onPublish((event) => {
   console.log('Closing out dive');
   let db = admin.firestore();
-  let sensorId = event.data.attributes.device_id;
-  let rawData = String(atob(event.data.data));
+  let sensorId = event.attributes.device_id;
+  let rawData = String(atob(event.data));
   console.log(`Raw Data: ${rawData}`);
 
   return 0;
