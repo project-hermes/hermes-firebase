@@ -53,17 +53,18 @@ exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
   let rawData = String(atob(event.data.data));
   console.log(`Raw Data: ${rawData}`);
 
-  let diveData = rawData.substring(1).split(" ").map(item => {
+  let diveData = rawData.substring(2).split(" ").map(item => {
     return parseInt(item, 10);
   });
 
   let dive = {
-    sensorId: sensorId,
     version: rawData.substring(0,1),
+    sensorId: sensorId,
+    sensorDiveId: rawData.substring(1,2),
     createdAt: new Date(),
     coordinateStart: new admin.firestore.GeoPoint(diveData[0], diveData[1]),
     coordinateEnd: new admin.firestore.GeoPoint(diveData[2], diveData[3]),
-    dataCount: diveData[4],
+    sampleCount: diveData[4],
     timeStart: new Date(diveData[5]),
     timeEnd: new Date(diveData[6])
   };
@@ -73,7 +74,7 @@ exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
 
     return 0;
   }).catch(error => {
-    console.error(`Error creating dive with error ${error}`);
+    console.error(`Error creating dive with error ${error} raw data ${rawData}`);
     return -1;
   });
 
