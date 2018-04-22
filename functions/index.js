@@ -81,12 +81,34 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
   let db = admin.firestore();
   let sensorId = event.attributes.device_id;
   let rawData = String(atob(event.data));
-  console.log(`Raw Data: ${rawData}`);
+
+  db.collection('Dive').where(`sensorDiveId`, `==`, `42`).where(`sensorId`,`==`,sensorId).get()
+    .then(snapshot => {
+      if (snapshot.size > 1) {
+        console.error("Found more than one dive with same sensorDiveId cowardly refusing to save data");
+        return -1;
+      }
+      snapshot.forEach(doc => {
+        console.log(doc.id, '=>', doc.data());
+      });
+      db.collection('Dive').doc(snapshot.docs[0].id).collection('data').add({
+        test:1
+      }).catch(err=>{
+        console.error(`Could not save dive data ${err}`);
+        return -1;
+      });
+      return 0;
+    })
+    .catch(err => {
+      console.error(`Could not find dive to append to ${err}`);
+      return -1;
+    });
 
   return 0;
 });
 
 exports.diveDone = functions.pubsub.topic('diveDone').onPublish((event) => {
+  //need to delete the sensorDiveId field so we dont write more than one at a time
   console.log('Closing out dive');
   let db = admin.firestore();
   let sensorId = event.attributes.device_id;
