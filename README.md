@@ -15,6 +15,11 @@ $ firebase serve   # Start development server
 $ firebase deploy  # Deploy new version of everything
 ```
 
+## To deploy only the functions
+```
+$ firebase deploy -P staging --only=functions
+```
+
 ## Databse
 
 All data is layed out in Google Firestore document databse
