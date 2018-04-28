@@ -108,7 +108,6 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
 });
 
 exports.diveDone = functions.pubsub.topic('diveDone').onPublish((event) => {
-  //need to delete the sensorDiveId field so we dont write more than one at a time
   console.log('Closing out dive');
   let db = admin.firestore();
   let sensorId = event.attributes.device_id;
