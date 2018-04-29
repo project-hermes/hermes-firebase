@@ -80,9 +80,21 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
   console.log('Appending dive');
   let db = admin.firestore();
   let sensorId = event.attributes.device_id;
-  let rawData = String(atob(event.data));
+  let rawData = atob(event.data);
+  
+  let message = { 
+	  format: rawData.charCodeAt(0),
+	  diveId: rawData.charCodeAt(1),
+	  samples: rawData.charCodeAt(6),
+	  startTime: rawData.charCodeAt(2)+rawData.charCodeAt(3)*256+rawData.charCodeAt(4)*65536+rawData.charCodeAt(5)*16777216
+  }
 
-  db.collection('Dive').where(`sensorDiveId`, `==`, `42`).where(`sensorId`,`==`,sensorId).get()
+  // Debug: this would be VERY shouty in production
+  console.log(`Raw Data (${rawData.length}): ${rawData}`);
+  
+  // Test: dump to a particular, known dive
+  //db.collection('Dive').where(`sensorDiveId`, `==`, message.diveId.toString()).where(`sensorId`,`==`,sensorId).get()
+  db.collection('Dive').where(`sensorDiveId`, `==`, `42`).where(`sensorId`,`==`,`1234`).get()
     .then(snapshot => {
       if (snapshot.size > 1) {
         console.error("Found more than one dive with same sensorDiveId cowardly refusing to save data");
@@ -92,7 +104,16 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
         console.log(doc.id, '=>', doc.data());
       });
       db.collection('Dive').doc(snapshot.docs[0].id).collection('data').add({
-        test:1
+	      rawLength: rawData.length,
+	      rawData: rawData,
+	      format: message.format,
+	      diveId: message.diveId,
+	      samples: message.samples,
+	      startTime: message.startTime,
+	      initDepth: rawData.charCodeAt(7)+rawData.charCodeAt(8)*256,
+	      initTemp1: (rawData.charCodeAt(9)+rawData.charCodeAt(10)*256)/200.0 - 50,
+	      initTemp2: (rawData.charCodeAt(11)+rawData.charCodeAt(12)*256)/200.0 - 50,
+	      actualTimestamp: Date.now()
       }).catch(err=>{
         console.error(`Could not save dive data ${err}`);
         return -1;
