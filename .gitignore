@@ -65,6 +65,6 @@ typings/
 # dotenv environment variables file
 .env
 
-
+public
 
 # End of https://www.gitignore.io/api/node,firebase

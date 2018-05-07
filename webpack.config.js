@@ -4,7 +4,10 @@ const path = require('path'),
       HtmlWebpackPlugin = require('html-webpack-plugin'),
       ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const extractPlugin = new ExtractTextPlugin({ filename: './assets/css/app.css' });
+const extractPlugin = new ExtractTextPlugin({
+    filename: './assets/css/app.css'
+    // allChunks: true
+});
 
 const config = {
   mode: 'development',
@@ -30,9 +33,19 @@ const config = {
       // html-loader
       { test: /\.html$/, use: ['html-loader'] },
       // sass-loader with sourceMap activated
+      // {
+      //   test: /\.css$/,
+      //   include: [
+      //       path.resolve(__dirname, './node_modules/bootstrap/dist/css')
+      //   ],
+      //   use: extractPlugin.extract({
+      //       fallback: 'style-loader',
+      //       use: ['css-loader', 'postcss-loader']
+      //   })
+      // },
       {
         test: /\.scss$/,
-        include: [path.resolve(__dirname, 'src', 'assets', 'scss')],
+        // include: [path.resolve(__dirname, 'src', 'assets', 'scss')],
         use: extractPlugin.extract({
           use: [
             {
@@ -69,15 +82,15 @@ const config = {
     extractPlugin
   ],
 
-  devServer: {
-    // static files served from here
-    contentBase: path.resolve(__dirname, "./public/assets/media"),
-    compress: true,
-    // open app in localhost:2000
-    port: 2000,
-    stats: 'errors-only',
-    open: true
-  },
+  // devServer: {
+  //   // static files served from here
+  //   contentBase: path.resolve(__dirname, "./public/assets/media"),
+  //   compress: true,
+  //   // open app in localhost:2000
+  //   port: 2000,
+  //   stats: 'errors-only',
+  //   open: true
+  // },
 
   devtool: 'inline-source-map'
 
