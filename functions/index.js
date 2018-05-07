@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const atob = require('atob');
 const req = require('request');
+const expectFormat = 4;
+
 admin.initializeApp(functions.config().firebase);
 
 exports.weatherGet = functions.firestore.document('Dive/{diveId}').onCreate((snap, context) => {
@@ -53,25 +55,44 @@ exports.diveCreate = functions.pubsub.topic('diveCreate').onPublish((event) => {
   let sensorId = event.attributes.device_id;
   let diveData = rawData.split(" ");
 
+  let timestamp = Date.now();
+
   let dive = {
-    version: diveData[0],
+    format: diveData[0],
     sensorId: sensorId,
     sensorDiveId: diveData[1],
-    createdAt: new Date(),
     coordinateStart: new admin.firestore.GeoPoint(parseFloat(diveData[2]), parseFloat(diveData[3])),
     coordinateEnd: new admin.firestore.GeoPoint(parseFloat(diveData[4]), parseFloat(diveData[5])),
     sampleCount: parseInt(diveData[6]),
     timeStart: new Date(parseInt(diveData[7])*1000),
-    timeEnd: new Date(parseInt(diveData[8])*1000)
+    timeEnd: new Date(parseInt(diveData[8])*1000),
+    createdAt: timestamp,
+    lastUpdatedAt: timestamp 
   };
 
-  db.collection('Dive').add(dive).then(ref => {
-    console.log(`Dive ${ref.id} written`);
-    return 0;
-  }).catch(error => {
-    console.error(`Error creating dive with error ${error} raw data ${event.data} attributes ${event.attributes.toString()}`);
-    return -1;
-  });
+  // No duplicate dives!
+  db.collection('Dive').where(`sensorId`, `==`, sensorId)
+		.where(`sensorDiveId`, `==`, dive.sensorDiveId.toString())
+		.get()
+    .then(snapshot => {
+      if (snapshot.size > 0) {
+        console.error(`Duplicate dive ${snapshot.docs[0].id}; aborting create!`);
+        throw new Error('Already exits');
+      }
+
+      db.collection('Dive').add(dive).then(ref => {
+        console.log(`Dive ${ref.id} written`);
+	return 0;
+      }).catch(error => {
+        console.error(`Error creating dive with error ${error} raw data ${event.data} attributes ${event.attributes.toString()}`);
+        return -1;
+      });
+      return 0;
+  }).catch(err => {
+      // TODO: probably ignore the 'Already Exists' error
+      console.error(`Error creating dive: ${err}`);
+      return -1;
+    });
 
   return 0;
 });
@@ -83,79 +104,62 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
 
   let z85Data = atob(event.data);
   // Debug: this would be VERY shouty in production
-  console.log(`z85 Data (${z85Data.length}): ${z85Data}`);
+  //console.log(`z85 Data (${z85Data.length}): ${z85Data}`);
 
   let rawData = module.exports.decode(z85Data);
   // Debug: this would be VERY shouty in production
   console.log(`Raw Data (${rawData.length}): ${rawData}`);
  
-  /* 
-  let message = { 
-	  format: rawData.charCodeAt(0),
-	  diveId: rawData.charCodeAt(1),
-	  samples: rawData.charCodeAt(6),
-	  startTime: rawData.charCodeAt(2)+rawData.charCodeAt(3)*256+rawData.charCodeAt(4)*65536+rawData.charCodeAt(5)*16777216
-  }
-  */
   let message = { 
 	  format: rawData.readUInt8(0),
 	  diveId: rawData.readUInt8(1),
 	  startTime: rawData.readUInt32LE(2),
 	  samples: rawData.readUInt8(6)
+  };
+  
+  if (message.format !== expectFormat) {
+        console.error(`Unexpected format code ${message.format}, expected format ${expectFormat}.`);
+        return -1;
   }
 
-  let decode = "";
-  for (let i = 0; i < rawData.length; ++i) {
-	  //decode = decode + rawData.charCodeAt(i) + " ";
-	  decode = decode + rawData.readUInt8(i) + " ";
-  }
-
-  let testStrData = "";
-  for (let i = 0; i < 256; ++i) {
-	  testStrData = testStrData + String.fromCharCode(i) + " ";
-  }
-  decode2 = testStrData.length + ": ";
-  for (let i = 0; i < testStrData.length + 1; ++i) {
-	  decode2 = decode2 + testStrData.charCodeAt(i) + " ";
-  }
-
-  // Test: dump to a particular, known dive
-  //db.collection('Dive').where(`sensorDiveId`, `==`, message.diveId.toString()).where(`sensorId`,`==`,sensorId).get()
-  db.collection('Dive').where(`sensorDiveId`, `==`, `42`).where(`sensorId`,`==`,`1234`).get()
+  db.collection('Dive').where(`sensorId`, `==`, sensorId)
+		.where(`sensorDiveId`, `==`, message.diveId.toString())
+		.get()
     .then(snapshot => {
-      if (snapshot.size > 1) {
-        console.error("Found more than one dive with same sensorDiveId cowardly refusing to save data");
-        return -1;
+      if (snapshot.size === 0) {
+      	console.error(`No dive found matching ${sensorId}, ${message.diveId.toString()}, ${message.startTime}!`)
+        throw new Error('No dive found!');
+      } else if (snapshot.size > 1) {
+        console.error(`Found ${snapshot.size} docs matching ${sensorId}, ${message.diveId.toString()}, ${message.startTime}!`)
+        throw new Error('Multiple dives found!');
       }
-      snapshot.forEach(doc => {
-        console.log(doc.id, '=>', doc.data());
+
+      let batch = db.batch();
+      let timestamp = message.startTime;
+      console.log(`Writing to ${snapshot.docs[0].id}: ${message.samples} at ${message.startTime}`);
+
+      for (let offset = 0; offset < message.samples; offset++) {
+	timestamp = message.startTime + offset;
+	// timestamp is ID -- avoid need to de-duplicate
+	batch.set(db.collection('Dive').doc(snapshot.docs[0].id).collection('data').doc(timestamp.toString()),
+		{
+		  timestamp: timestamp,
+		  depth: rawData.readUInt16LE(7 + (6*offset)),
+		  temp1: rawData.readUInt16LE(9 + (6*offset))/200.0 - 50,
+		  temp2: rawData.readUInt16LE(11 + (6*offset))/200.0 - 50
+      		});
+      }
+
+      batch.commit().catch(err=>{
+      	  console.error(`Error during batch commit: ${err}`);
+      	  return -1;
       });
-      db.collection('Dive').doc(snapshot.docs[0].id).collection('data').add({
-	      rawLength: rawData.length,
-	      rawData: rawData,
-	      format: message.format,
-	      diveId: message.diveId,
-	      samples: message.samples,
-	      startTime: message.startTime,
-		/*
-	      initDepth: rawData.charCodeAt(7)+rawData.charCodeAt(8)*256,
-	      initTemp1: (rawData.charCodeAt(9)+rawData.charCodeAt(10)*256)/200.0 - 50,
-	      initTemp2: (rawData.charCodeAt(11)+rawData.charCodeAt(12)*256)/200.0 - 50,
-		*/
-	      initDepth: rawData.readUInt16LE(7),
-	      initTemp1: rawData.readUInt16LE(9)/200.0 - 50,
-	      initTemp2: rawData.readUInt16LE(11)/200.0 - 50,
-	      actualTimestamp: Date.now(),
-	      decode: decode
-	      //decode2: decode2
-      }).catch(err=>{
-        console.error(`Could not save dive data ${err}`);
-        return -1;
-      });
+      
+      console.log(`Write sucess on ${snapshot.docs[0].id}: ${message.samples} at ${message.startTime}`);
+
       return 0;
-    })
-    .catch(err => {
-      console.error(`Could not find dive to append to ${err}`);
+    }).catch(err => {
+      console.error(`Error before batch commit: ${err}`);
       return -1;
     });
 
@@ -163,11 +167,51 @@ exports.diveAppend = functions.pubsub.topic('diveAppend').onPublish((event) => {
 });
 
 exports.diveDone = functions.pubsub.topic('diveDone').onPublish((event) => {
-  console.log('Closing out dive');
+  console.log('Closing dive');
+  // Initially, use same data format as diveCreate; can verify field match
   let db = admin.firestore();
-  let sensorId = event.attributes.device_id;
   let rawData = String(atob(event.data));
-  console.log(`Raw Data: ${rawData}`);
+  let sensorId = event.attributes.device_id;
+  let diveData = rawData.split(" ");
+
+  let dive = {
+    format: diveData[0],
+    sensorId: sensorId,
+    sensorDiveId: diveData[1],
+    coordinateStart: new admin.firestore.GeoPoint(parseFloat(diveData[2]), parseFloat(diveData[3])),
+    coordinateEnd: new admin.firestore.GeoPoint(parseFloat(diveData[4]), parseFloat(diveData[5])),
+    sampleCount: parseInt(diveData[6]),
+    timeStart: new Date(parseInt(diveData[7])*1000),
+    timeEnd: new Date(parseInt(diveData[8])*1000)
+  };
+
+  // TODO: verify that all samples have been received before closing
+  db.collection('Dive').where(`sensorId`, `==`, sensorId)
+		.where(`sensorDiveId`, `==`, dive.sensorDiveId.toString())
+		.get()
+    .then(snapshot => {
+      if (snapshot.size === 0) {
+      	console.error(`No dive found matching ${sensorId}, ${dive.sensorDiveId.toString()}!`)
+        throw new Error('No dive found!');
+      } else if (snapshot.size > 1) {
+        console.error(`Found ${snapshot.size} docs matching ${sensorId}, ${dive.sensorDiveId.toString()}!`)
+        throw new Error('Multiple dives found!');
+      }
+
+      console.log(`Closing out dive ${snapshot.docs[0].id}`);
+      let data = snapshot.docs[0].data();
+      data.lastUpdatedAt = Date.now();
+      data.sensorDiveId = "_"+data.sensorDiveId;
+      
+      db.collection('Dive').doc(snapshot.docs[0].id).set(data).catch(err=>{
+        console.error(`Error during dive close: ${err}`);
+        return -1;
+      });
+    return 0;
+  }).catch(err => {
+    console.error(`Error before dive close: ${err}`);
+    return -1;
+  });
 
   return 0;
 });
