@@ -1,5 +1,9 @@
 <template>
-  <el-select v-model="value" placeholder="Select">
+  <el-select
+    v-model="value"
+    placeholder="Select"
+    @change="onChange"
+    >
     <el-option
       v-for="item in dives"
       :key="item.value"
@@ -15,6 +19,9 @@
             dives: {
                 type: Array,
                 default: []
+            },
+            onChange: {
+                type: Function
             }
         },
         data () {
