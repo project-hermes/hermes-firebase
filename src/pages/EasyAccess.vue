@@ -54,8 +54,7 @@ export default {
         },
         onDiveSelect (id) {
             this.fetchDive(id).then(snapshot => {
-                const rows = sortBy(snapshot.docs, ['id']);
-
+                const rows = snapshot.docs;
                 const depthInfo = {
                     prop: 'depth',
                     min: Number.MAX_SAFE_INTEGER,
@@ -123,7 +122,7 @@ export default {
             });
         },
         fetchDive (id) {
-            return db.doc(`Dive/${id}`).collection('data').get();
+            return db.doc(`Dive/${id}`).collection('data').orderBy('timestamp').get();
         },
         getNums (rows) {
 
