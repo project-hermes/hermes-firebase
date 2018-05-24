@@ -6,12 +6,14 @@
       />
       <DiveInfoTable :info="diveInfo" />
       <Chart :chart-data="chartData" />
+      <DiveMap :map-info="mapInfo" />
   </div>
 </template>
 
 <script>
 import DiveChooser from '../components/DiveChooser.vue';
 import DiveInfoTable from '../components/DiveInfoTable.vue';
+import DiveMap from '../components/DiveMap.vue';
 import Chart from '../components/Chart.vue';
 import sortBy from 'lodash/sortBy';
 import {db} from '../firebase';
@@ -20,13 +22,15 @@ export default {
     components: {
         DiveChooser,
         DiveInfoTable,
-        Chart
+        Chart,
+        DiveMap
     },
     data () {
         return {
             dives: [],
             chartData: [],
-            diveInfo: []
+            diveInfo: [],
+            mapInfo: {}
         };
     },
     mounted () {
@@ -120,6 +124,21 @@ export default {
                     temp2Info
                 ];
             });
+
+            const dive = this.dives.find(dive => dive.id === id);
+            const {coordinateEnd, coordinateStart, timeEnd, timeStart} = dive.data;
+            this.mapInfo = {
+                coordinateEnd: {
+                    latitude: coordinateEnd.latitude,
+                    longitude: coordinateEnd.longitude
+                },
+                coordinateStart: {
+                    latitude: coordinateStart.latitude,
+                    longitude: coordinateStart.longitude
+                },
+                timeEnd,
+                timeStart
+            };
         },
         fetchDive (id) {
             return db.doc(`Dive/${id}`).collection('data').orderBy('timestamp').get();
