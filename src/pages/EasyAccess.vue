@@ -140,9 +140,9 @@ export default {
                 }
 
                 this.diveAnalytics = [
-                    depthInfo,
-                    temp1Info,
-                    temp2Info
+                    this.cmFormat(depthInfo),
+                    this.celciusFormat(temp1Info),
+                    this.celciusFormat(temp2Info)
                 ];
             });
 
@@ -167,8 +167,17 @@ export default {
         fetchDive (id) {
             return db.doc(`Dive/${id}`).collection('data').orderBy('timestamp').get();
         },
-        getNums (rows) {
-
+        celciusFormat (obj) {
+            return Object.keys(obj).reduce((acc, key) => {
+                acc[key] = `${obj[key]} °C`
+                return acc;
+            }, {});
+        },
+        cmFormat (obj) {
+            return Object.keys(obj).reduce((acc, key) => {
+                acc[key] = `${obj[key]} cm`
+                return acc;
+            }, {});
         }
     }
 }
