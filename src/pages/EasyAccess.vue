@@ -53,6 +53,7 @@ export default {
     mounted () {
         this.fetchDives().then(dives => {
             this.dives = sortBy(dives, ({time}) => -time);
+            this.onDiveSelect(this.dives[0].id);
         });
     },
     methods: {
