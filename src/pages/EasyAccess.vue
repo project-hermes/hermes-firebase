@@ -11,6 +11,7 @@
                 />
             </el-aside>
             <el-main v-if="isDiveSelected">
+                <h3 v-if="selectedDive">Dive {{selectedDive.label}}</h3>
                 <DiveInfoTable :analytics="diveAnalytics" />
                 <Chart :chart-data="chartData" />
                 <DiveMap :map-info="mapInfo" />
@@ -45,7 +46,8 @@ export default {
             chartData: [],
             diveAnalytics: [],
             mapInfo: {},
-            series: {}
+            series: {},
+            selectedDive: null
         };
     },
     mounted () {
@@ -75,6 +77,7 @@ export default {
         onDiveSelect (id) {
             this.isDiveSelected = true;
             this.fetchDive(id).then(snapshot => {
+                // if (selectedDive.id !== id) return;
                 const rows = snapshot.docs;
                 const depthInfo = {
                     prop: 'depth',
@@ -147,7 +150,7 @@ export default {
             });
 
             const dive = this.dives.find(dive => dive.id === id);
-
+            this.selectedDive = dive;
             const {coordinateEnd, coordinateStart, timeEnd, timeStart} = dive.data;
             this.$nextTick(() => {
                 this.mapInfo = {
