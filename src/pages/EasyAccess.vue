@@ -5,8 +5,8 @@
         </el-header>
         <el-container>
             <el-aside width="200px">
-                <DiveChooser
-                  :dives="dives"
+                <CardList
+                  :items="dives"
                   :onClick="onDiveSelect"
                 />
             </el-aside>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import DiveChooser from '../components/DiveChooser.vue';
+import CardList from '../components/CardList/CardList.vue';
 import DiveInfoTable from '../components/DiveInfoTable.vue';
 import DiveMap from '../components/DiveMap.vue';
 import Chart from '../components/Chart.vue';
@@ -33,7 +33,7 @@ import {db} from '../firebase';
 
 export default {
     components: {
-        DiveChooser,
+        CardList,
         DiveInfoTable,
         Chart,
         DiveMap
@@ -217,5 +217,16 @@ export default {
   .el-main {
     background-color: #E9EEF3;
     color: #333;
+  }
+
+  .card-container .el-card {
+      margin: 4px;
+      border: 1px solid #b9b9b9;
+      background-color: #dfe5ea;
+      border-radius: 1px;
+  }
+
+  .card-container .el-card:hover {
+      background-color: #f3faff;
   }
 </style>
