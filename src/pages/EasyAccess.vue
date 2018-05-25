@@ -136,8 +136,8 @@ export default {
                     latitude: coordinateStart.latitude,
                     longitude: coordinateStart.longitude
                 },
-                timeEnd,
-                timeStart
+                timeEnd: timeEnd.toDate().toLocaleString(),
+                timeStart: timeStart.toDate().toLocaleString()
             };
         },
         fetchDive (id) {
