@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  mode: 'development',
   entry: [
     './src/app.js'
   ],
@@ -50,6 +49,5 @@ module.exports = {
       filename: 'style.[contenthash].css',
     }),
     new VueLoaderPlugin()
-  ],
-  devtool: 'inline-source-map'
+  ]
 };
