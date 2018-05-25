@@ -1,13 +1,25 @@
 <template>
-  <div>
-      <DiveChooser
-        :dives="dives"
-        :onChange="onDiveSelect"
-      />
-      <DiveInfoTable :info="diveInfo" />
-      <Chart :chart-data="chartData" />
-      <DiveMap :map-info="mapInfo" />
-  </div>
+    <el-container>
+        <el-header>
+            <h1>Hermes Dive View</h1>
+        </el-header>
+        <el-container>
+            <el-aside width="200px">
+                <DiveChooser
+                  :dives="dives"
+                  :onClick="onDiveSelect"
+                />
+            </el-aside>
+            <el-main v-if="isDiveSelected">
+                <DiveInfoTable :analytics="diveAnalytics" />
+                <Chart :chart-data="chartData" />
+                <DiveMap :map-info="mapInfo" />
+            </el-main>
+            <el-main v-else class="empty">
+                <h2>Select a dive</h2>
+            </el-main>
+        </el-container>
+    </el-container>
 </template>
 
 <script>
@@ -28,9 +40,12 @@ export default {
     data () {
         return {
             dives: [],
+            isDiveSelected: false,
+            diveItem: {},
             chartData: [],
-            diveInfo: [],
-            mapInfo: {}
+            diveAnalytics: [],
+            mapInfo: {},
+            series: {}
         };
     },
     mounted () {
@@ -44,6 +59,7 @@ export default {
                 const dives = [];
                 querySnapshot.forEach(doc => {
                     const data = doc.data();
+                    data.id = doc.id;
                     const date = data.timeEnd.toDate();
                     dives.push({
                         data,
@@ -57,6 +73,7 @@ export default {
             });
         },
         onDiveSelect (id) {
+            this.isDiveSelected = true;
             this.fetchDive(id).then(snapshot => {
                 const rows = snapshot.docs;
                 const depthInfo = {
@@ -109,16 +126,20 @@ export default {
                 temp1Info.avg = temp1Info.sum / rows.length;
                 temp2Info.avg = temp2Info.sum / rows.length;
 
+                this.series = {
+                    depth: {label: 'Depth', data: depthSeries},
+                    temp1: {label: 'Temp 1', data: temp1Series},
+                    temp2: {label: 'Temp 2', data: temp2Series}
+                };
+
                 this.chartData = {
                     labels: chartTimeStampLabels,
                     datasets: [
-                        // {label: 'Depth', data: depthSeries, backgroundColor: 'red'},
-                        {label: 'Temp 1', data: temp1Series, backgroundColor: 'green'},
-                        // {label: 'Temp 2', data: temp2Series, backgroundColor: 'blue'}
+                        this.series.temp1
                     ]
                 }
 
-                this.diveInfo = [
+                this.diveAnalytics = [
                     depthInfo,
                     temp1Info,
                     temp2Info
@@ -126,19 +147,22 @@ export default {
             });
 
             const dive = this.dives.find(dive => dive.id === id);
+
             const {coordinateEnd, coordinateStart, timeEnd, timeStart} = dive.data;
-            this.mapInfo = {
-                coordinateEnd: {
-                    latitude: coordinateEnd.latitude,
-                    longitude: coordinateEnd.longitude
-                },
-                coordinateStart: {
-                    latitude: coordinateStart.latitude,
-                    longitude: coordinateStart.longitude
-                },
-                timeEnd: timeEnd.toDate().toLocaleString(),
-                timeStart: timeStart.toDate().toLocaleString()
-            };
+            this.$nextTick(() => {
+                this.mapInfo = {
+                    coordinateEnd: {
+                        latitude: coordinateEnd.latitude,
+                        longitude: coordinateEnd.longitude
+                    },
+                    coordinateStart: {
+                        latitude: coordinateStart.latitude,
+                        longitude: coordinateStart.longitude
+                    },
+                    timeEnd: timeEnd.toDate().toLocaleString(),
+                    timeStart: timeStart.toDate().toLocaleString()
+                };
+            });
         },
         fetchDive (id) {
             return db.doc(`Dive/${id}`).collection('data').orderBy('timestamp').get();
@@ -150,3 +174,35 @@ export default {
 }
 
 </script>
+
+<style>
+    .el-container {
+        height: 100%;
+    }
+
+    .empty {
+        display: flex;
+        justify-content: center;
+    }
+
+    .empty h1 {
+        font-size: 3em;
+        margin-top: 40px;
+    }
+  .el-header {
+    background-color: #bdccdf;
+    color: #333;
+  }
+
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    overflow-y: scroll;
+  }
+
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+  }
+</style>

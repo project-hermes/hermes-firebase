@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h1>Hermes</h1>
     <EasyAccess />
-  </div>
 </template>
 
 <script>
@@ -13,5 +10,14 @@ export default {
         EasyAccess
     }
 }
-
 </script>
+
+<style>
+    body {
+        margin: 0;
+    }
+
+    body, html {
+        height: 100%;
+    }
+</style>
