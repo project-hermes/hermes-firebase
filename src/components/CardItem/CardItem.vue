@@ -1,32 +1,33 @@
 <template>
-    <div
-        class="card-container"
-        @click="_onClick(id)">
-        <el-card>
-            <slot />
-        </el-card>
-    </div>
+  <div
+    class="card-container"
+    @click="_onClick(id)">
+    <el-card>
+      <slot />
+    </el-card>
+  </div>
 </template>
 <script>
-    export default {
-        props: {
-            id: {
-                required: true
-            },
-            onClick: {
-                required: true,
-                type: Function
-            }
+export default {
+    props: {
+        id: {
+            type: String,
+            required: true
         },
-        methods: {
-            _onClick (id) {
-                this.onClick(id);
-            }
+        onClick: {
+            required: true,
+            type: Function
+        }
+    },
+    methods: {
+        _onClick(id) {
+            this.onClick(id);
         }
     }
+};
 </script>
 <style>
-    .card-container:hover {
-        cursor: pointer;
-    }
+.card-container:hover {
+    cursor: pointer;
+}
 </style>

@@ -1,35 +1,30 @@
 <template>
+  <el-container>
+    <el-header>
+      <h1>Hermes Dive View</h1>
+    </el-header>
     <el-container>
-        <el-header>
-            <h1>Hermes Dive View</h1>
-        </el-header>
-        <el-container>
-            <el-aside width="200px">
-                <CardList
-                  :items="dives"
-                  :onClick="onDiveSelect"
-                />
-            </el-aside>
-            <el-main v-if="isDiveSelected">
-                <h3 v-if="selectedDive">Dive {{selectedDive.label}}</h3>
-                <DiveInfoTable :analytics="diveAnalytics" />
-                <LineChart :chart-data="chartData" />
-                <SimpleMap
-                    style="height: 800px;"
-                    :markers="mapMarkers"
-                />
-            </el-main>
-        </el-container>
+      <el-aside width="200px">
+        <CardList
+          :items="dives"
+          :on-click="onDiveSelect"
+        />
+      </el-aside>
+      <el-main v-if="isDiveSelected">
+        <h3 v-if="selectedDive">Dive {{ selectedDive.label }}</h3>
+        <DiveInfoTable :analytics="diveAnalytics" />
+        <LineChart :chart-data="chartData" />
+        <SimpleMap
+          :markers="mapMarkers"
+          style="height: 800px;"
+        />
+      </el-main>
     </el-container>
+  </el-container>
 </template>
 
 <script>
-import {
-    CardList,
-    DiveInfoTable,
-    LineChart,
-    SimpleMap
-} from '../../components';
+import {CardList, DiveInfoTable, LineChart, SimpleMap} from '../../components';
 import sortBy from 'lodash/sortBy';
 import {db} from '../../firebase';
 
@@ -40,7 +35,7 @@ export default {
         LineChart,
         SimpleMap
     },
-    data () {
+    data() {
         return {
             dives: [],
             isDiveSelected: false,
@@ -52,35 +47,37 @@ export default {
             mapMarkers: undefined
         };
     },
-    mounted () {
+    mounted() {
         this.fetchDives().then(dives => {
             this.dives = sortBy(dives, ({time}) => -time);
             this.onDiveSelect(this.dives[0].id);
         });
     },
     methods: {
-        fetchDives () {
-            return db.collection('Dive').get().then(querySnapshot => {
-                const dives = [];
-                querySnapshot.forEach(doc => {
-                    const data = doc.data();
-                    data.id = doc.id;
-                    const date = data.timeEnd.toDate();
-                    dives.push({
-                        data,
-                        value: doc.id,
-                        id: doc.id,
-                        time: date.valueOf(),
-                        label: date.toLocaleString()
+        fetchDives() {
+            return db
+                .collection('Dive')
+                .get()
+                .then(querySnapshot => {
+                    const dives = [];
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        data.id = doc.id;
+                        const date = data.timeEnd.toDate();
+                        dives.push({
+                            data,
+                            value: doc.id,
+                            id: doc.id,
+                            time: date.valueOf(),
+                            label: date.toLocaleString()
+                        });
                     });
+                    return dives;
                 });
-                return dives;
-            });
         },
-        onDiveSelect (id) {
+        onDiveSelect(id) {
             this.isDiveSelected = true;
             this.fetchDive(id).then(snapshot => {
-                // if (selectedDive.id !== id) return;
                 const rows = snapshot.docs;
                 const depthInfo = {
                     prop: 'depth',
@@ -125,7 +122,9 @@ export default {
                     if (temp2Info.min > temp2) temp2Info.min = temp2;
                     if (temp2Info.max < temp2) temp2Info.max = temp2;
 
-                    chartTimeStampLabels.push((new Date(timestamp * 1000)).toTimeString());
+                    chartTimeStampLabels.push(
+                        new Date(timestamp * 1000).toTimeString()
+                    );
                 });
 
                 depthInfo.avg = depthInfo.sum / rows.length;
@@ -140,10 +139,8 @@ export default {
 
                 this.chartData = {
                     labels: chartTimeStampLabels,
-                    datasets: [
-                        this.series.temp1
-                    ]
-                }
+                    datasets: [this.series.temp1]
+                };
 
                 this.diveAnalytics = [
                     this.cmFormat(depthInfo),
@@ -158,85 +155,90 @@ export default {
                 this.createMapMarkers(dive.data);
             });
         },
-        fetchDive (id) {
-            return db.doc(`Dive/${id}`).collection('data').orderBy('timestamp').get();
+        fetchDive(id) {
+            return db
+                .doc(`Dive/${id}`)
+                .collection('data')
+                .orderBy('timestamp')
+                .get();
         },
-        celciusFormat (obj) {
+        celciusFormat(obj) {
             return Object.keys(obj).reduce((acc, key) => {
-                acc[key] = `${obj[key]} °C`
+                acc[key] = `${obj[key]} °C`;
                 return acc;
             }, {});
         },
-        cmFormat (obj) {
+        cmFormat(obj) {
             return Object.keys(obj).reduce((acc, key) => {
-                acc[key] = `${obj[key]} cm`
+                acc[key] = `${obj[key]} cm`;
                 return acc;
             }, {});
         },
-        createMapMarkers (diveData) {
+        createMapMarkers(diveData) {
             const {
                 coordinateEnd: {latitude: endLat, longitude: endLng},
                 coordinateStart: {latitude: startLat, longitude: startLng},
-                timeEnd,
-                timeStart
+                timeStart,
+                timeEnd
             } = diveData;
+            const startDate = timeStart.toDate().toLocaleString();
+            const endDate = timeEnd.toDate().toLocaleString();
             this.mapMarkers = [
                 {
                     lat: startLat,
                     lng: startLng,
-                    popupTemplate: 'asdsadadssad'
+                    popupTemplate: `Dive started ${startDate}`
                 },
                 {
                     lat: endLat,
                     lng: endLng,
-                    popupTemplate: 'asdasdasdasdas1231231231221'
+                    popupTemplate: `Dive ended ${endDate}`
                 }
             ];
         }
     }
-}
-
+};
 </script>
 
 <style>
-    .el-container {
-        height: 100%;
-    }
+.el-container {
+    height: 100%;
+}
 
-    .empty {
-        display: flex;
-        justify-content: center;
-    }
+.empty {
+    display: flex;
+    justify-content: center;
+}
 
-    .empty h1 {
-        font-size: 3em;
-        margin-top: 40px;
-    }
-  .el-header {
+.empty h1 {
+    font-size: 3em;
+    margin-top: 40px;
+}
+.el-header {
     background-color: #bdccdf;
     color: #333;
-  }
+}
 
-  .el-aside {
-    background-color: #D3DCE6;
+.el-aside {
+    background-color: #d3dce6;
     color: #333;
     text-align: center;
     overflow-y: scroll;
-  }
+}
 
-  .el-main {
-    background-color: #E9EEF3;
+.el-main {
+    background-color: #e9eef3;
     color: #333;
-  }
+}
 
-  .card-container .el-card {
-      margin: 4px;
-      border: 1px solid #b9b9b9;
-      background-color: #dfe5ea;
-      border-radius: 1px;
-  }
+.card-container .el-card {
+    margin: 4px;
+    border: 1px solid #b9b9b9;
+    background-color: #dfe5ea;
+    border-radius: 1px;
+}
 
-  .card-container .el-card:hover {
-      background-color: #f3faff;
-  }
+.card-container .el-card:hover {
+    background-color: #f3faff;
+}
 </style>

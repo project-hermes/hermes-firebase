@@ -6,19 +6,21 @@
   "scripts": {
     "build": "webpack --config ./webpack.dev.js",
     "building": "webpack --config ./webpack.dev.js  --watch",
-    "build:prod": "webpack --config ./webpack.prod.js"
+    "build:prod": "webpack --config ./webpack.prod.js",
+    "lint": "eslint src --fix --ext .vue"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/project-hermes/hermes-firebase.git"
   },
-  "author": "",
+  "author": "Project Hermes",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/project-hermes/hermes-firebase/issues"
   },
   "homepage": "https://github.com/project-hermes/hermes-firebase#readme",
   "dependencies": {
+    "@vue/eslint-config-standard": "^3.0.0-beta.11",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "element-ui": "^2.3.8",
@@ -36,11 +38,17 @@
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-vue": "^4.5.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.11",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.0",
+    "prettier": "^1.12.1",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
     "vue-loader": "^15.0.9",

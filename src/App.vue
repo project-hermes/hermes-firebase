@@ -1,5 +1,5 @@
 <template>
-    <Dives />
+  <Dives />
 </template>
 
 <script>
@@ -8,15 +8,16 @@ export default {
     components: {
         Dives
     }
-}
+};
 </script>
 
 <style>
-    body {
-        margin: 0;
-    }
+body {
+    margin: 0;
+}
 
-    body, html {
-        height: 100%;
-    }
+body,
+html {
+    height: 100%;
+}
 </style>
