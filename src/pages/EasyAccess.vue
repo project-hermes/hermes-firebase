@@ -13,11 +13,11 @@
             <el-main v-if="isDiveSelected">
                 <h3 v-if="selectedDive">Dive {{selectedDive.label}}</h3>
                 <DiveInfoTable :analytics="diveAnalytics" />
-                <Chart :chart-data="chartData" />
-                <DiveMap :map-info="mapInfo" />
-            </el-main>
-            <el-main v-else class="empty">
-                <h2>Select a dive</h2>
+                <LineChart :chart-data="chartData" />
+                <SimpleMap
+                    style="height: 800px;"
+                    :markers="mapMarkers"
+                />
             </el-main>
         </el-container>
     </el-container>
@@ -26,8 +26,8 @@
 <script>
 import CardList from '../components/CardList/CardList.vue';
 import DiveInfoTable from '../components/DiveInfoTable.vue';
-import DiveMap from '../components/DiveMap.vue';
-import Chart from '../components/Chart.vue';
+import LineChart from '../components/LineChart/LineChart.vue';
+import SimpleMap from '../components/SimpleMap/SimpleMap.vue';
 import sortBy from 'lodash/sortBy';
 import {db} from '../firebase';
 
@@ -35,19 +35,19 @@ export default {
     components: {
         CardList,
         DiveInfoTable,
-        Chart,
-        DiveMap
+        LineChart,
+        SimpleMap
     },
     data () {
         return {
             dives: [],
             isDiveSelected: false,
             diveItem: {},
-            chartData: [],
+            chartData: {},
             diveAnalytics: [],
-            mapInfo: {},
             series: {},
-            selectedDive: null
+            selectedDive: null,
+            mapMarkers: undefined
         };
     },
     mounted () {
@@ -152,20 +152,8 @@ export default {
 
             const dive = this.dives.find(dive => dive.id === id);
             this.selectedDive = dive;
-            const {coordinateEnd, coordinateStart, timeEnd, timeStart} = dive.data;
             this.$nextTick(() => {
-                this.mapInfo = {
-                    coordinateEnd: {
-                        latitude: coordinateEnd.latitude,
-                        longitude: coordinateEnd.longitude
-                    },
-                    coordinateStart: {
-                        latitude: coordinateStart.latitude,
-                        longitude: coordinateStart.longitude
-                    },
-                    timeEnd: timeEnd.toDate().toLocaleString(),
-                    timeStart: timeStart.toDate().toLocaleString()
-                };
+                this.createMapMarkers(dive.data);
             });
         },
         fetchDive (id) {
@@ -182,6 +170,26 @@ export default {
                 acc[key] = `${obj[key]} cm`
                 return acc;
             }, {});
+        },
+        createMapMarkers (diveData) {
+            const {
+                coordinateEnd: {latitude: endLat, longitude: endLng},
+                coordinateStart: {latitude: startLat, longitude: startLng},
+                timeEnd,
+                timeStart
+            } = diveData;
+            this.mapMarkers = [
+                {
+                    lat: startLat,
+                    lng: startLng,
+                    popupTemplate: 'asdsadadssad'
+                },
+                {
+                    lat: endLat,
+                    lng: endLng,
+                    popupTemplate: 'asdasdasdasdas1231231231221'
+                }
+            ];
         }
     }
 }
