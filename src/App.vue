@@ -1,13 +1,12 @@
 <template>
-    <EasyAccess />
+    <Dives />
 </template>
 
 <script>
-import EasyAccess from './pages/EasyAccess.vue';
-
+import Dives from './pages/Dives/Dives.vue';
 export default {
     components: {
-        EasyAccess
+        Dives
     }
 }
 </script>

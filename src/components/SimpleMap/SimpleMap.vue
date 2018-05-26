@@ -4,7 +4,6 @@
 
 <script>
     import L from 'leaflet';
-    import shortid from 'shortid';
     import head from 'lodash/head';
     export default {
         props: {

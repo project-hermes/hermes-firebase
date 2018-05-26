@@ -24,12 +24,14 @@
 </template>
 
 <script>
-import CardList from '../components/CardList/CardList.vue';
-import DiveInfoTable from '../components/DiveInfoTable.vue';
-import LineChart from '../components/LineChart/LineChart.vue';
-import SimpleMap from '../components/SimpleMap/SimpleMap.vue';
+import {
+    CardList,
+    DiveInfoTable,
+    LineChart,
+    SimpleMap
+} from '../../components';
 import sortBy from 'lodash/sortBy';
-import {db} from '../firebase';
+import {db} from '../../firebase';
 
 export default {
     components: {
