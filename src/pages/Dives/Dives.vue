@@ -1,25 +1,23 @@
 <template>
   <el-container>
-    <el-header>
-      <h1>Hermes Dive View</h1>
-    </el-header>
-    <el-container>
-      <el-aside width="200px">
-        <CardList
-          :items="dives"
-          :on-click="onDiveSelect"
-        />
-      </el-aside>
-      <el-main v-if="isDiveSelected">
-        <h3 v-if="selectedDive">Dive {{ selectedDive.label }}</h3>
-        <DiveInfoTable :analytics="diveAnalytics" />
-        <LineChart :chart-data="chartData" />
-        <SimpleMap
-          :markers="mapMarkers"
-          style="height: 800px;"
-        />
-      </el-main>
-    </el-container>
+    <el-aside width="250px">
+      <el-header>
+        <h1 class="header-title">Hermes</h1>
+      </el-header>
+      <CardList
+        :items="dives"
+        :on-click="onDiveSelect"
+      />
+    </el-aside>
+    <el-main v-if="isDiveSelected">
+      <h3 v-if="selectedDive">Dive {{ selectedDive.label }}</h3>
+      <DiveInfoTable :analytics="diveAnalytics" />
+      <LineChart :chart-data="chartData" />
+      <SimpleMap
+        :markers="mapMarkers"
+        style="height: 800px;"
+      />
+    </el-main>
   </el-container>
 </template>
 
@@ -205,37 +203,42 @@ export default {
     height: 100%;
 }
 
-.empty {
-    display: flex;
-    justify-content: center;
+.el-header {
+    background-color: #486591;
+    color: #fff;
 }
 
-.empty h1 {
-    font-size: 3em;
-    margin-top: 40px;
-}
-.el-header {
-    background-color: #bdccdf;
-    color: #333;
+.el-header .header-title {
+    margin: 0;
+    padding: 0;
+    line-height: 60px;
 }
 
 .el-aside {
-    background-color: #d3dce6;
+    background-color: #e3f2fd;
     color: #333;
     text-align: center;
     overflow-y: scroll;
 }
 
 .el-main {
-    background-color: #e9eef3;
+    background-color: #fff;
     color: #333;
 }
 
 .card-container .el-card {
     margin: 4px;
-    border: 1px solid #b9b9b9;
-    background-color: #dfe5ea;
+    border: 1px solid #dadada;
+    background-color: #e3f2fd;
     border-radius: 1px;
+}
+
+.card-container .el-card.is-always-shadow {
+    box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.card-container .el-card.is-always-shadow:hover {
+    box-shadow: 0px 3px 5px 0 rgba(0, 0, 0, 0.3);
 }
 
 .card-container .el-card:hover {
