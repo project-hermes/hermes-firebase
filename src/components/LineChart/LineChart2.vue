@@ -23,15 +23,37 @@ export default {
                         turboThreshold: 3000
                     }
                 },
-                series: [
+                tooltip: {
+                    shared: true
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: [
                     {
-                        type: 'spline',
-                        name: this.chartData.label,
-                        data: this.chartData.series
+                        title: {
+                            text: 'Temperature'
+                        },
+                        labels: {
+                            format: '{value} °C'
+                        }
+                    },
+                    {
+                        title: {
+                            text: 'Depth'
+                        },
+                        labels: {
+                            format: '{value} cm'
+                        },
+                        opposite: true
                     }
-                ]
+                ],
+                series: this.chartData.series
             });
         }
+    },
+    mounted() {
+        window.chartData = {};
     }
 };
 </script>

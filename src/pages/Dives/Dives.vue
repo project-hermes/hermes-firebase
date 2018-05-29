@@ -57,7 +57,9 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <LineChart2 :chart-data="chartData" />
+            <el-card>
+              <LineChart2 :chart-data="chartData" />
+            </el-card>
           </el-col>
         </el-row>
       </el-main>
@@ -157,44 +159,59 @@ export default {
                 };
                 const temp2Series = [];
 
-                const chartTimeStampLabels = [];
-
                 rows.forEach(row => {
                     const {depth, temp1, temp2, timestamp} = row.data();
-                    depthSeries.push({x: timestamp, y: depth});
+                    const date = new Date(timestamp * 1000);
+                    depthSeries.push({x: date, y: depth});
                     depthInfo.sum += depth;
                     if (depthInfo.min > depth) depthInfo.min = depth;
                     if (depthInfo.max < depth) depthInfo.max = depth;
 
-                    temp1Series.push({x: timestamp, y: temp1});
+                    temp1Series.push({x: date, y: temp1});
                     temp1Info.sum += temp1;
                     if (temp1Info.min > temp1) temp1Info.min = temp1;
                     if (temp1Info.max < temp1) temp1Info.max = temp1;
 
-                    temp2Series.push({x: timestamp, y: temp2});
+                    temp2Series.push({x: date, y: temp2});
                     temp2Info.sum += temp2;
                     if (temp2Info.min > temp2) temp2Info.min = temp2;
                     if (temp2Info.max < temp2) temp2Info.max = temp2;
-
-                    chartTimeStampLabels.push(
-                        new Date(timestamp * 1000).toTimeString()
-                    );
                 });
 
                 depthInfo.avg = depthInfo.sum / rows.length;
                 temp1Info.avg = temp1Info.sum / rows.length;
                 temp2Info.avg = temp2Info.sum / rows.length;
 
-                this.series = {
-                    depth: {label: 'Depth', data: depthSeries},
-                    temp1: {label: 'Temp 1', data: temp1Series},
-                    temp2: {label: 'Temp 2', data: temp2Series}
-                };
-
                 this.chartData = {
-                    labels: chartTimeStampLabels,
-                    label: 'Temp 1',
-                    series: temp1Series
+                    series: [
+                        {
+                            type: 'spline',
+                            name: 'temp1',
+                            data: temp1Series,
+                            yAxis: 0,
+                            tooltip: {
+                                valueSuffix: ' °C'
+                            }
+                        },
+                        {
+                            type: 'spline',
+                            name: 'temp2',
+                            data: temp2Series,
+                            yAxis: 0,
+                            tooltip: {
+                                valueSuffix: ' °C'
+                            }
+                        },
+                        {
+                            type: 'spline',
+                            name: 'depth',
+                            data: depthSeries,
+                            yAxis: 1,
+                            tooltip: {
+                                valueSuffix: ' cm'
+                            }
+                        }
+                    ]
                 };
 
                 this.diveAnalytics = [
@@ -311,8 +328,8 @@ export default {
     overflow-y: hidden;
 }
 
-.el-row {
-    padding: 1em 0;
+.el-card {
+    margin: 1em 0;
 }
 
 .el-container .card-list-button {
