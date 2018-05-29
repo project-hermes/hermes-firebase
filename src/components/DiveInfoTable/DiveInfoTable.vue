@@ -1,26 +1,24 @@
 <template>
-  <el-row>
-    <el-col :span="24">
-      <el-table
-        :data="analytics"
-        style="width: 100%">
-        <el-table-column
-          prop="prop"
-          label="Parameter"
-          width="180"/>
-        <el-table-column
-          prop="max"
-          label="Max"
-          width="180"/>
-        <el-table-column
-          prop="min"
-          label="Min"/>
-        <el-table-column
-          prop="avg"
-          label="Avg"/>
-      </el-table>
-    </el-col>
-  </el-row>
+  <el-card class="dive-info-table">
+    <el-table
+      :data="analytics"
+      style="width: 100%">
+      <el-table-column
+        prop="prop"
+        label="Parameter"
+      />
+      <el-table-column
+        prop="max"
+        label="Max"
+      />
+      <el-table-column
+        prop="min"
+        label="Min"/>
+      <el-table-column
+        prop="avg"
+        label="Avg"/>
+    </el-table>
+  </el-card>
 </template>
 
 <script>
@@ -37,3 +35,8 @@ export default {
     }
 };
 </script>
+<style>
+.dive-info-table .cell {
+    font-size: 1.15em;
+}
+</style>

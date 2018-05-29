@@ -2,7 +2,7 @@
   <div
     class="card-container"
     @click="_onClick(id)">
-    <el-card>
+    <el-card shadow="hover">
       <slot />
     </el-card>
   </div>

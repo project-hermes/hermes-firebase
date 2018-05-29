@@ -18,7 +18,9 @@
         />
       </el-aside>
       <el-main v-if="isDiveSelected">
-        <el-row :gutter="20">
+        <el-row
+          :gutter="20"
+          class="dive-info-row">
           <el-col
             :xs="24"
             :sm="24"
@@ -38,6 +40,7 @@
                 <span class="dive-details-value">{{ item.value }}</span>
               </div>
             </el-card>
+            <DiveInfoTable :analytics="diveAnalytics" />
           </el-col>
           <el-col
             :xs="24"
@@ -46,16 +49,15 @@
             :lg="12"
             :xl="12"
             class="map-container">
-            <SimpleMap
+            <el-card><SimpleMap
               :markers="mapMarkers"
-              style="height: 400px;"
-            />
+              style="height: 500px;"
+            /></el-card>
           </el-col>
         </el-row>
-        <DiveInfoTable :analytics="diveAnalytics" />
         <el-row>
           <el-col :span="24">
-            <LineChart :chart-data="chartData" />
+            <LineChart2 :chart-data="chartData" />
           </el-col>
         </el-row>
       </el-main>
@@ -64,15 +66,16 @@
 </template>
 
 <script>
-import {CardList, DiveInfoTable, LineChart, SimpleMap} from '../../components';
+import {CardList, DiveInfoTable, LineChart2, SimpleMap} from '../../components';
 import sortBy from 'lodash/sortBy';
+import isNumber from 'lodash/isNumber';
 import {db} from '../../firebase';
 
 export default {
     components: {
         CardList,
         DiveInfoTable,
-        LineChart,
+        LineChart2,
         SimpleMap
     },
     data() {
@@ -122,6 +125,12 @@ export default {
         onDiveSelect(id) {
             this.isDiveSelected = true;
             this.showCardList = false;
+            this.diveAnalytics = [
+                {prop: 'depth'},
+                {prop: 'temp1'},
+                {prop: 'temp2'}
+            ];
+
             this.fetchDive(id).then(snapshot => {
                 const rows = snapshot.docs;
                 const depthInfo = {
@@ -184,7 +193,8 @@ export default {
 
                 this.chartData = {
                     labels: chartTimeStampLabels,
-                    datasets: [this.series.temp1]
+                    label: 'Temp 1',
+                    series: temp1Series
                 };
 
                 this.diveAnalytics = [
@@ -238,13 +248,15 @@ export default {
         },
         celciusFormat(obj) {
             return Object.keys(obj).reduce((acc, key) => {
-                acc[key] = `${obj[key]} °C`;
+                const val = obj[key];
+                acc[key] = isNumber(val) ? `${val.toLocaleString()} °C` : val;
                 return acc;
             }, {});
         },
         cmFormat(obj) {
             return Object.keys(obj).reduce((acc, key) => {
-                acc[key] = `${obj[key]} cm`;
+                const val = obj[key];
+                acc[key] = isNumber(val) ? `${val.toLocaleString()} cm` : val;
                 return acc;
             }, {});
         },
@@ -299,6 +311,10 @@ export default {
     overflow-y: hidden;
 }
 
+.el-row {
+    padding: 1em 0;
+}
+
 .el-container .card-list-button {
     display: none;
     transition: transform 100ms;
@@ -314,6 +330,11 @@ export default {
     transform: rotate(-90deg);
 }
 
+.el-container .dive-info-row {
+    display: flex;
+    align-items: center;
+}
+
 @media (max-width: 767px) {
     .el-container .el-aside {
         display: none;
@@ -327,6 +348,10 @@ export default {
     .el-container .card-list-button {
         display: block;
     }
+
+    .el-container .dive-info-row {
+        display: block;
+    }
 }
 
 .el-main {
@@ -336,17 +361,9 @@ export default {
 
 .card-container .el-card {
     margin: 4px;
-    border: 1px solid #dadada;
+    border: 1px solid #888;
     background-color: #e3f2fd;
     border-radius: 1px;
-}
-
-.card-container .el-card.is-always-shadow {
-    box-shadow: 0px 1px 5px 0 rgba(0, 0, 0, 0.3);
-}
-
-.card-container .el-card.is-always-shadow:hover {
-    box-shadow: 0px 3px 5px 0 rgba(0, 0, 0, 0.3);
 }
 
 .card-container .el-card:hover {

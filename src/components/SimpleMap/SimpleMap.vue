@@ -22,7 +22,7 @@ export default {
         markers() {
             this.removeMarkers(this.map, this.currentMarkers);
             const {lat, lng} = head(this.markers);
-            this.map.setView([lat, lng], 18);
+            this.map.setView([lat, lng], 12);
             this.currentMarkers = this.addMarkers(this.map, this.markers);
         }
     },
