@@ -1,5 +1,5 @@
 <template>
-  <div class="item-container">
+  <div class="card-list">
     <CardItem
       v-for="item in items"
       :key="item.id"
@@ -27,3 +27,9 @@ export default {
     }
 };
 </script>
+<style>
+.card-list {
+    overflow-y: auto;
+    height: 100%;
+}
+</style>

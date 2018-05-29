@@ -1,23 +1,65 @@
 <template>
   <el-container>
-    <el-aside width="250px">
-      <el-header>
-        <h1 class="header-title">Hermes</h1>
-      </el-header>
-      <CardList
-        :items="dives"
-        :on-click="onDiveSelect"
-      />
-    </el-aside>
-    <el-main v-if="isDiveSelected">
-      <h3 v-if="selectedDive">Dive {{ selectedDive.label }}</h3>
-      <DiveInfoTable :analytics="diveAnalytics" />
-      <LineChart :chart-data="chartData" />
-      <SimpleMap
-        :markers="mapMarkers"
-        style="height: 800px;"
-      />
-    </el-main>
+    <el-header>
+      <div
+        :class="{open: showCardList}"
+        class="card-list-button el-icon-arrow-down"
+        @click="toggleDiveList"/>
+      <h1 class="header-title">Hermes</h1>
+    </el-header>
+    <el-container>
+      <el-aside
+        :class="{open: showCardList}"
+        width="250px"
+      >
+        <CardList
+          :items="dives"
+          :on-click="onDiveSelect"
+        />
+      </el-aside>
+      <el-main v-if="isDiveSelected">
+        <el-row :gutter="20">
+          <el-col
+            :xs="24"
+            :sm="24"
+            :md="12"
+            :lg="12"
+            :xl="12">
+            <el-card class="dive-details-card">
+              <div slot="header">
+                <span class="dive-details-prop">Dive</span>&colon;&nbsp;
+                <span class="dive-details-value">{{ selectedDive.id }}</span>
+              </div>
+              <div
+                v-for="item in selectedDive.propList"
+                :key="item.prop"
+                class="text item">
+                <span class="dive-details-prop">{{ item.prop }}</span>&colon;&nbsp;
+                <span class="dive-details-value">{{ item.value }}</span>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col
+            :xs="24"
+            :sm="24"
+            :md="12"
+            :lg="12"
+            :xl="12"
+            class="map-container">
+            <SimpleMap
+              :markers="mapMarkers"
+              style="height: 400px;"
+            />
+          </el-col>
+        </el-row>
+        <DiveInfoTable :analytics="diveAnalytics" />
+        <el-row>
+          <el-col :span="24">
+            <LineChart :chart-data="chartData" />
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
   </el-container>
 </template>
 
@@ -42,7 +84,8 @@ export default {
             diveAnalytics: [],
             series: {},
             selectedDive: null,
-            mapMarkers: undefined
+            mapMarkers: undefined,
+            showCardList: false
         };
     },
     mounted() {
@@ -73,8 +116,12 @@ export default {
                     return dives;
                 });
         },
+        toggleDiveList() {
+            this.showCardList = !this.showCardList;
+        },
         onDiveSelect(id) {
             this.isDiveSelected = true;
+            this.showCardList = false;
             this.fetchDive(id).then(snapshot => {
                 const rows = snapshot.docs;
                 const depthInfo = {
@@ -149,6 +196,35 @@ export default {
 
             const dive = this.dives.find(dive => dive.id === id);
             this.selectedDive = dive;
+            this.selectedDive.propList = Object.entries(dive.data).map(
+                ([prop, value]) => {
+                    switch (prop) {
+                        case 'coordinateEnd':
+                        case 'coordinateStart':
+                            return {
+                                prop,
+                                value: `[${value.latitude}, ${value.longitude}]`
+                            };
+                        case 'createdAt':
+                        case 'lastUpdatedAt':
+                            return {
+                                prop,
+                                value: new Date(value).toLocaleString()
+                            };
+                        case 'timeEnd':
+                        case 'timeStart':
+                            return {
+                                prop,
+                                value: value.toDate().toLocaleString()
+                            };
+                        default:
+                            return {
+                                prop,
+                                value
+                            };
+                    }
+                }
+            );
             this.$nextTick(() => {
                 this.createMapMarkers(dive.data);
             });
@@ -206,19 +282,51 @@ export default {
 .el-header {
     background-color: #486591;
     color: #fff;
+    display: flex;
+    justify-content: start;
 }
 
 .el-header .header-title {
-    margin: 0;
+    margin: 0 0 0 0.5em;
     padding: 0;
     line-height: 60px;
 }
 
-.el-aside {
+.el-container .el-aside {
     background-color: #e3f2fd;
     color: #333;
     text-align: center;
-    overflow-y: scroll;
+    overflow-y: hidden;
+}
+
+.el-container .card-list-button {
+    display: none;
+    transition: transform 100ms;
+}
+
+.card-list-button::before {
+    font-size: 2em;
+    line-height: 60px;
+    cursor: pointer;
+}
+
+.card-list-button.open {
+    transform: rotate(-90deg);
+}
+
+@media (max-width: 767px) {
+    .el-container .el-aside {
+        display: none;
+    }
+
+    .el-container .el-aside.open {
+        display: block;
+        width: 100% !important;
+    }
+
+    .el-container .card-list-button {
+        display: block;
+    }
 }
 
 .el-main {
@@ -243,5 +351,14 @@ export default {
 
 .card-container .el-card:hover {
     background-color: #f3faff;
+}
+
+.dive-details-card {
+    font-size: 1.15em;
+    line-height: 1.5em;
+}
+
+.dive-details-prop {
+    font-weight: bold;
 }
 </style>
