@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import App from './App.vue';
-import ElementUI from 'element-ui';
 import enLocale from 'element-ui/lib/locale/lang/en';
 import './firebase';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -13,7 +12,29 @@ L.Icon.Default.mergeOptions({
 });
 import 'leaflet/dist/leaflet.css';
 
-Vue.use(ElementUI, {locale: enLocale});
+import {
+    Container,
+    Header,
+    Aside,
+    Main,
+    Row,
+    Col,
+    Card,
+    Table,
+    TableColumn
+} from 'element-ui';
+
+Vue.use(Container);
+Vue.use(Header);
+Vue.use(Aside);
+Vue.use(Main);
+Vue.use(Row);
+Vue.use(Col);
+Vue.use(Card);
+Vue.use(Table);
+Vue.use(TableColumn);
+
+Vue.prototype.$ELEMENT = {locale: enLocale};
 new Vue({
     el: '#app',
     render: h => h(App)
