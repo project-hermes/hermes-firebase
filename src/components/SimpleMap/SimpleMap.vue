@@ -32,7 +32,7 @@ export default {
     methods: {
         initMap() {
             this.map = L.map('simple-map');
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18
             }).addTo(this.map);
             this.map.scrollWheelZoom.disable();
