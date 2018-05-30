@@ -30,6 +30,7 @@ export default {
 <style>
 .card-list {
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     height: 100%;
 }
 </style>

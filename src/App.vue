@@ -15,6 +15,7 @@ export default {
 body {
     margin: 0;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-overflow-scrolling: touch;
 }
 
 body,
