@@ -21,7 +21,9 @@ import {
     Col,
     Card,
     Table,
-    TableColumn
+    TableColumn,
+    Button,
+    Alert
 } from 'element-ui';
 
 Vue.use(Container);
@@ -33,6 +35,8 @@ Vue.use(Col);
 Vue.use(Card);
 Vue.use(Table);
 Vue.use(TableColumn);
+Vue.use(Button);
+Vue.use(Alert);
 
 Vue.prototype.$ELEMENT = {locale: enLocale};
 new Vue({

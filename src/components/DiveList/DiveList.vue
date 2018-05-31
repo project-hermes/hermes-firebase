@@ -5,7 +5,11 @@
       :key="item.id"
       :id="item.id"
       :on-click="onClick">
-      {{ item.label }}
+      <div>
+        <strong>Dive</strong>
+      </div>
+      <div>{{ item.id }}</div>
+      <div>{{ item.label }}</div>
     </CardItem>
   </div>
 </template>

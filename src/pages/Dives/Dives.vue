@@ -12,7 +12,25 @@
         :class="{open: showCardList}"
         width="250px"
       >
-        <CardList
+        <el-alert
+          v-if="hasNewDives && !neverShowPopup"
+          title="Want to see new dives?"
+          type="info"
+          show-icon>
+          <p>
+            <el-button
+              size="mini"
+              round
+              type="success"
+              @click="loadNewDivesList()">Yes</el-button>
+            <el-button
+              size="mini"
+              round
+              type="danger"
+              @click="closePopup()">No</el-button>
+          </p>
+        </el-alert>
+        <DiveList
           :items="dives"
           :on-click="onDiveSelect"
         />
@@ -63,19 +81,25 @@
           </el-col>
         </el-row>
       </el-main>
+      <el-main
+        v-if="!isDiveSelected"
+        class="empty">
+        <h1>Select a dive</h1>
+        </el-row>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import {CardList, DiveInfoTable, LineChart2, SimpleMap} from '../../components';
+import {DiveList, DiveInfoTable, LineChart2, SimpleMap} from '../../components';
 import sortBy from 'lodash/sortBy';
 import isNumber from 'lodash/isNumber';
 import {db} from '../../firebase';
 
 export default {
     components: {
-        CardList,
+        DiveList,
         DiveInfoTable,
         LineChart2,
         SimpleMap
@@ -90,36 +114,65 @@ export default {
             series: {},
             selectedDive: null,
             mapMarkers: undefined,
-            showCardList: false
+            showCardList: false,
+            pendingSnapshot: null,
+            hasNewDives: false,
+            neverShowPopup: false
         };
     },
     mounted() {
-        this.fetchDives().then(dives => {
-            this.dives = sortBy(dives, ({time}) => -time);
-            this.onDiveSelect(this.dives[0].id);
-        });
+        this.listenForDives();
     },
     methods: {
+        listenForDives() {
+            db.collection('Dive').onSnapshot(snapshot => {
+                if (this.dives.length > 0) {
+                    this.pendingSnapshot = snapshot;
+                    this.askForPermissionToShowNewDives();
+                } else {
+                    this.dives = sortBy(
+                        this.getDivesFromSnapshot(snapshot),
+                        ({time}) => -time
+                    );
+                }
+            });
+        },
         fetchDives() {
             return db
                 .collection('Dive')
                 .get()
                 .then(querySnapshot => {
-                    const dives = [];
-                    querySnapshot.forEach(doc => {
-                        const data = doc.data();
-                        data.id = doc.id;
-                        const date = data.timeEnd.toDate();
-                        dives.push({
-                            data,
-                            value: doc.id,
-                            id: doc.id,
-                            time: date.valueOf(),
-                            label: date.toLocaleString()
-                        });
-                    });
-                    return dives;
+                    return this.getDivesFromSnapshot(querySnapshot);
                 });
+        },
+        getDivesFromSnapshot(querySnapshot) {
+            return querySnapshot.docs.map(doc => {
+                const data = doc.data();
+                data.id = doc.id;
+                const date = data.timeEnd.toDate();
+                return {
+                    data,
+                    value: doc.id,
+                    id: doc.id,
+                    time: date.valueOf(),
+                    label: date.toLocaleString()
+                };
+            });
+        },
+        askForPermissionToShowNewDives() {
+            this.hasNewDives = true;
+        },
+        loadNewDivesList() {
+            this.hasNewDives = false;
+            this.dives = sortBy(
+                this.getDivesFromSnapshot(this.pendingSnapshot),
+                ({time}) => -time
+            );
+            this.pendingSnapshot = null;
+        },
+        closePopup() {
+            this.hasNewDives = false;
+            this.neverShowPopup = true;
         },
         toggleDiveList() {
             this.showCardList = !this.showCardList;
@@ -394,5 +447,15 @@ export default {
 
 .dive-details-prop {
     font-weight: bold;
+}
+
+.empty {
+    display: flex;
+    justify-content: center;
+}
+
+.empty h1 {
+    font-size: 2em;
+    padding: 5em;
 }
 </style>
