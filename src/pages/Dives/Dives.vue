@@ -76,7 +76,7 @@
         <el-row>
           <el-col :span="24">
             <el-card>
-              <LineChart2 :chart-data="chartData" />
+              <LineChart :chart-data="chartData" />
             </el-card>
           </el-col>
         </el-row>
@@ -85,14 +85,13 @@
         v-if="!isDiveSelected"
         class="empty">
         <h1>Select a dive</h1>
-        </el-row>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import {DiveList, DiveInfoTable, LineChart2, SimpleMap} from '../../components';
+import {DiveList, DiveInfoTable, LineChart, SimpleMap} from '../../components';
 import sortBy from 'lodash/sortBy';
 import isNumber from 'lodash/isNumber';
 import {db} from '../../firebase';
@@ -101,7 +100,7 @@ export default {
     components: {
         DiveList,
         DiveInfoTable,
-        LineChart2,
+        LineChart,
         SimpleMap
     },
     data() {
