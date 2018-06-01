@@ -10,6 +10,7 @@
       </div>
       <div>{{ item.id }}</div>
       <div>{{ item.label }}</div>
+      <div>{{ item.data.sampleCount }} samples</div>
     </CardItem>
   </div>
 </template>

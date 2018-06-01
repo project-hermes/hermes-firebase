@@ -10,6 +10,11 @@ module.exports = {
         path: path.resolve(__dirname, 'public'),
         filename: './[name].bundle.js'
     },
+    resolve: {
+        alias: {
+            '~': path.resolve(__dirname, 'src')
+        }
+    },
     module: {
         rules: [
             {
@@ -23,11 +28,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: [
-                            [
-                                'env'
-                            ]
-                        ],
+                        presets: [['env']],
                         plugins: [
                             [
                                 'component',

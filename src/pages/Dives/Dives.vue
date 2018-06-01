@@ -91,10 +91,10 @@
 </template>
 
 <script>
-import {DiveList, DiveInfoTable, LineChart, SimpleMap} from '../../components';
+import {DiveList, DiveInfoTable, LineChart, SimpleMap} from '~/components';
 import sortBy from 'lodash/sortBy';
 import isNumber from 'lodash/isNumber';
-import {db} from '../../firebase';
+import {listenForDives, fetchDive} from '~/api';
 
 export default {
     components: {
@@ -120,30 +120,19 @@ export default {
         };
     },
     mounted() {
-        this.listenForDives();
+        listenForDives(snapshot => {
+            if (this.dives.length > 0) {
+                this.pendingSnapshot = snapshot;
+                this.askForPermissionToShowNewDives();
+            } else {
+                this.dives = sortBy(
+                    this.getDivesFromSnapshot(snapshot),
+                    ({time}) => -time
+                );
+            }
+        });
     },
     methods: {
-        listenForDives() {
-            db.collection('Dive').onSnapshot(snapshot => {
-                if (this.dives.length > 0) {
-                    this.pendingSnapshot = snapshot;
-                    this.askForPermissionToShowNewDives();
-                } else {
-                    this.dives = sortBy(
-                        this.getDivesFromSnapshot(snapshot),
-                        ({time}) => -time
-                    );
-                }
-            });
-        },
-        fetchDives() {
-            return db
-                .collection('Dive')
-                .get()
-                .then(querySnapshot => {
-                    return this.getDivesFromSnapshot(querySnapshot);
-                });
-        },
         getDivesFromSnapshot(querySnapshot) {
             return querySnapshot.docs.map(doc => {
                 const data = doc.data();
@@ -185,7 +174,7 @@ export default {
                 {prop: 'temp2'}
             ];
 
-            this.fetchDive(id).then(snapshot => {
+            fetchDive(id).then(snapshot => {
                 const rows = snapshot.docs;
                 const depthInfo = {
                     prop: 'depth',
@@ -307,13 +296,6 @@ export default {
             this.$nextTick(() => {
                 this.createMapMarkers(dive.data);
             });
-        },
-        fetchDive(id) {
-            return db
-                .doc(`Dive/${id}`)
-                .collection('data')
-                .orderBy('timestamp')
-                .get();
         },
         celciusFormat(obj) {
             return Object.keys(obj).reduce((acc, key) => {
