@@ -12,30 +12,11 @@
         :class="{open: showCardList}"
         width="250px"
       >
-        <el-alert
-          v-if="hasNewDives && !neverShowPopup"
-          title="Want to see new dives?"
-          type="info"
-          show-icon>
-          <p>
-            <el-button
-              size="mini"
-              round
-              type="success"
-              @click="loadNewDivesList()">Yes</el-button>
-            <el-button
-              size="mini"
-              round
-              type="danger"
-              @click="closePopup()">No</el-button>
-          </p>
-        </el-alert>
         <DiveList
-          :items="dives"
           :on-click="onDiveSelect"
         />
       </el-aside>
-      <el-main v-if="isDiveSelected">
+      <el-main v-if="selectedDive">
         <el-row
           :gutter="20"
           class="dive-info-row">
@@ -51,7 +32,7 @@
                 <span class="dive-details-value">{{ selectedDive.id }}</span>
               </div>
               <div
-                v-for="item in selectedDive.propList"
+                v-for="item in divePropList"
                 :key="item.prop"
                 class="text item">
                 <span class="dive-details-prop">{{ item.prop }}</span>&colon;&nbsp;
@@ -82,7 +63,7 @@
         </el-row>
       </el-main>
       <el-main
-        v-if="!isDiveSelected"
+        v-if="!selectedDive"
         class="empty">
         <h1>Select a dive</h1>
       </el-main>
@@ -92,9 +73,8 @@
 
 <script>
 import {DiveList, DiveInfoTable, LineChart, SimpleMap} from '~/components';
-import sortBy from 'lodash/sortBy';
 import isNumber from 'lodash/isNumber';
-import {listenForDives, fetchDive} from '~/api';
+import {fetchDive} from '~/api';
 
 export default {
     components: {
@@ -105,197 +85,125 @@ export default {
     },
     data() {
         return {
-            dives: [],
-            isDiveSelected: false,
-            diveItem: {},
+            selectedDive: null,
             chartData: {},
             diveAnalytics: [],
-            series: {},
-            selectedDive: null,
+            divePropList: [],
             mapMarkers: undefined,
-            showCardList: false,
-            pendingSnapshot: null,
-            hasNewDives: false,
-            neverShowPopup: false
+            showCardList: false
         };
     },
-    mounted() {
-        listenForDives(snapshot => {
-            if (this.dives.length > 0) {
-                this.pendingSnapshot = snapshot;
-                this.askForPermissionToShowNewDives();
-            } else {
-                this.dives = sortBy(
-                    this.getDivesFromSnapshot(snapshot),
-                    ({time}) => -time
-                );
-            }
-        });
-    },
     methods: {
-        getDivesFromSnapshot(querySnapshot) {
-            return querySnapshot.docs.map(doc => {
-                const data = doc.data();
-                data.id = doc.id;
-                const date = data.timeEnd.toDate();
-                return {
-                    data,
-                    value: doc.id,
-                    id: doc.id,
-                    time: date.valueOf(),
-                    label: date.toLocaleString()
-                };
-            });
-        },
-        askForPermissionToShowNewDives() {
-            this.hasNewDives = true;
-        },
-        loadNewDivesList() {
-            this.hasNewDives = false;
-            this.dives = sortBy(
-                this.getDivesFromSnapshot(this.pendingSnapshot),
-                ({time}) => -time
-            );
-            this.pendingSnapshot = null;
-        },
-        closePopup() {
-            this.hasNewDives = false;
-            this.neverShowPopup = true;
-        },
         toggleDiveList() {
             this.showCardList = !this.showCardList;
         },
-        onDiveSelect(id) {
-            this.isDiveSelected = true;
-            this.showCardList = false;
-            this.diveAnalytics = [
-                {prop: 'depth'},
-                {prop: 'temp1'},
-                {prop: 'temp2'}
-            ];
-
-            fetchDive(id).then(snapshot => {
+        onDiveSelect(dive) {
+            fetchDive(dive.id).then(snapshot => {
                 const rows = snapshot.docs;
-                const depthInfo = {
-                    prop: 'depth',
-                    min: Number.MAX_SAFE_INTEGER,
-                    max: Number.MIN_SAFE_INTEGER,
-                    sum: 0
-                };
-                const depthSeries = [];
-
-                const temp1Info = {
-                    prop: 'temp1',
-                    min: Number.MAX_SAFE_INTEGER,
-                    max: Number.MIN_SAFE_INTEGER,
-                    sum: 0
-                };
-                const temp1Series = [];
-
-                const temp2Info = {
-                    prop: 'temp2',
-                    min: Number.MAX_SAFE_INTEGER,
-                    max: Number.MIN_SAFE_INTEGER,
-                    sum: 0
-                };
-                const temp2Series = [];
-
-                rows.forEach(row => {
-                    const {depth, temp1, temp2, timestamp} = row.data();
-                    const date = new Date(timestamp * 1000);
-                    depthSeries.push({x: date, y: depth});
-                    depthInfo.sum += depth;
-                    if (depthInfo.min > depth) depthInfo.min = depth;
-                    if (depthInfo.max < depth) depthInfo.max = depth;
-
-                    temp1Series.push({x: date, y: temp1});
-                    temp1Info.sum += temp1;
-                    if (temp1Info.min > temp1) temp1Info.min = temp1;
-                    if (temp1Info.max < temp1) temp1Info.max = temp1;
-
-                    temp2Series.push({x: date, y: temp2});
-                    temp2Info.sum += temp2;
-                    if (temp2Info.min > temp2) temp2Info.min = temp2;
-                    if (temp2Info.max < temp2) temp2Info.max = temp2;
+                const {depth, temp1, temp2} = this.processDiveData(rows);
+                this.chartData = this.buildChartData({
+                    depthSeries: depth.series,
+                    temp1Series: temp1.series,
+                    temp2Series: temp2.series
                 });
 
-                depthInfo.avg = depthInfo.sum / rows.length;
-                temp1Info.avg = temp1Info.sum / rows.length;
-                temp2Info.avg = temp2Info.sum / rows.length;
-
-                this.chartData = {
-                    series: [
-                        {
-                            type: 'spline',
-                            name: 'temp1',
-                            data: temp1Series,
-                            yAxis: 0,
-                            tooltip: {
-                                valueSuffix: ' °C'
-                            }
-                        },
-                        {
-                            type: 'spline',
-                            name: 'temp2',
-                            data: temp2Series,
-                            yAxis: 0,
-                            tooltip: {
-                                valueSuffix: ' °C'
-                            }
-                        },
-                        {
-                            type: 'spline',
-                            name: 'depth',
-                            data: depthSeries,
-                            yAxis: 1,
-                            tooltip: {
-                                valueSuffix: ' cm'
-                            }
-                        }
-                    ]
-                };
-
                 this.diveAnalytics = [
-                    this.cmFormat(depthInfo),
-                    this.celciusFormat(temp1Info),
-                    this.celciusFormat(temp2Info)
+                    this.cmFormat(depth),
+                    this.celciusFormat(temp1),
+                    this.celciusFormat(temp2)
                 ];
             });
 
-            const dive = this.dives.find(dive => dive.id === id);
+            this.showCardList = false;
             this.selectedDive = dive;
-            this.selectedDive.propList = Object.entries(dive.data).map(
-                ([prop, value]) => {
-                    switch (prop) {
-                        case 'coordinateEnd':
-                        case 'coordinateStart':
-                            return {
-                                prop,
-                                value: `[${value.latitude}, ${value.longitude}]`
-                            };
-                        case 'createdAt':
-                        case 'lastUpdatedAt':
-                            return {
-                                prop,
-                                value: new Date(value).toLocaleString()
-                            };
-                        case 'timeEnd':
-                        case 'timeStart':
-                            return {
-                                prop,
-                                value: value.toDate().toLocaleString()
-                            };
-                        default:
-                            return {
-                                prop,
-                                value
-                            };
-                    }
+            this.divePropList = this.buildPropList(dive.data);
+            this.mapMarkers = this.createMapMarkers(dive.data);
+        },
+        createMapMarkers(diveData) {
+            const {
+                coordinateEnd: {latitude: endLat, longitude: endLng},
+                coordinateStart: {latitude: startLat, longitude: startLng},
+                timeStart,
+                timeEnd
+            } = diveData;
+            const startDate = timeStart.toDate().toLocaleString();
+            const endDate = timeEnd.toDate().toLocaleString();
+            return [
+                {
+                    lat: startLat,
+                    lng: startLng,
+                    popupTemplate: `Dive started ${startDate}`
+                },
+                {
+                    lat: endLat,
+                    lng: endLng,
+                    popupTemplate: `Dive ended ${endDate}`
                 }
-            );
-            this.$nextTick(() => {
-                this.createMapMarkers(dive.data);
+            ];
+        },
+        buildPropList(diveData) {
+            return Object.entries(diveData).map(([prop, value]) => {
+                switch (prop) {
+                    case 'coordinateEnd':
+                    case 'coordinateStart':
+                        return {
+                            prop,
+                            value: `[${value.latitude}, ${value.longitude}]`
+                        };
+                    case 'createdAt':
+                    case 'lastUpdatedAt':
+                        return {
+                            prop,
+                            value: new Date(value).toLocaleString()
+                        };
+                    case 'timeEnd':
+                    case 'timeStart':
+                        return {
+                            prop,
+                            value: value.toDate().toLocaleString()
+                        };
+                    default:
+                        return {
+                            prop,
+                            value
+                        };
+                }
             });
+        },
+        processDiveData(rows) {
+            const props = ['depth', 'temp1', 'temp2'];
+            const propMap = props.reduce((map, prop) => {
+                map[prop] = {
+                    prop,
+                    min: Number.MAX_SAFE_INTEGER,
+                    max: Number.MIN_SAFE_INTEGER,
+                    sum: 0,
+                    series: []
+                };
+                return map;
+            }, {});
+
+            rows.forEach(row => {
+                const data = row.data();
+                const {timestamp} = data;
+                const date = new Date(timestamp * 1000);
+
+                props.forEach(prop => {
+                    const info = propMap[prop];
+                    const value = data[prop];
+                    info.series.push({x: date, y: value});
+                    info.sum += value;
+                    info.min = Math.min(info.min, value);
+                    info.max = Math.max(info.max, value);
+                });
+            });
+
+            props.forEach(prop => {
+                const info = propMap[prop];
+                info.avg = info.sum / rows.length;
+            });
+
+            return propMap;
         },
         celciusFormat(obj) {
             return Object.keys(obj).reduce((acc, key) => {
@@ -311,27 +219,38 @@ export default {
                 return acc;
             }, {});
         },
-        createMapMarkers(diveData) {
-            const {
-                coordinateEnd: {latitude: endLat, longitude: endLng},
-                coordinateStart: {latitude: startLat, longitude: startLng},
-                timeStart,
-                timeEnd
-            } = diveData;
-            const startDate = timeStart.toDate().toLocaleString();
-            const endDate = timeEnd.toDate().toLocaleString();
-            this.mapMarkers = [
-                {
-                    lat: startLat,
-                    lng: startLng,
-                    popupTemplate: `Dive started ${startDate}`
-                },
-                {
-                    lat: endLat,
-                    lng: endLng,
-                    popupTemplate: `Dive ended ${endDate}`
-                }
-            ];
+        buildChartData({depthSeries, temp1Series, temp2Series}) {
+            return {
+                series: [
+                    {
+                        type: 'spline',
+                        name: 'temp1',
+                        data: temp1Series,
+                        yAxis: 0,
+                        tooltip: {
+                            valueSuffix: ' °C'
+                        }
+                    },
+                    {
+                        type: 'spline',
+                        name: 'temp2',
+                        data: temp2Series,
+                        yAxis: 0,
+                        tooltip: {
+                            valueSuffix: ' °C'
+                        }
+                    },
+                    {
+                        type: 'spline',
+                        name: 'depth',
+                        data: depthSeries,
+                        yAxis: 1,
+                        tooltip: {
+                            valueSuffix: ' cm'
+                        }
+                    }
+                ]
+            };
         }
     }
 };

@@ -12,6 +12,10 @@
         "prettier"
     ],
     "rules": {
-        "prettier/prettier": ["error", { "singleQuote": true, "tabWidth": 4, "bracketSpacing": false }]
+        "prettier/prettier": ["error", {
+            "singleQuote": true,
+            "tabWidth": 4,
+            "bracketSpacing": false
+        }]
     }
 }

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
-import enLocale from 'element-ui/lib/locale/lang/en';
+import lang from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale';
 import './firebase';
 import 'element-ui/lib/theme-chalk/index.css';
 import L from 'leaflet';
@@ -38,7 +39,9 @@ Vue.use(TableColumn);
 Vue.use(Button);
 Vue.use(Alert);
 
-Vue.prototype.$ELEMENT = {locale: enLocale};
+locale.use(lang);
+Vue.prototype.$ELEMENT = {locale};
+
 new Vue({
     el: '#app',
     render: h => h(App)

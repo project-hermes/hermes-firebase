@@ -1,7 +1,7 @@
 <template>
   <div
     class="card-container"
-    @click="_onClick(id)">
+    @click="_onClick(item)">
     <el-card shadow="hover">
       <slot />
     </el-card>
@@ -10,9 +10,10 @@
 <script>
 export default {
     props: {
-        id: {
-            type: String,
-            required: true
+        item: {
+            type: Object,
+            required: false,
+            default: () => ({})
         },
         onClick: {
             required: true,
@@ -20,8 +21,8 @@ export default {
         }
     },
     methods: {
-        _onClick(id) {
-            this.onClick(id);
+        _onClick(item) {
+            this.onClick(item);
         }
     }
 };

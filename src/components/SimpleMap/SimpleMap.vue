@@ -20,14 +20,14 @@ export default {
     },
     watch: {
         markers() {
-            this.removeMarkers(this.map, this.currentMarkers);
-            const {lat, lng} = head(this.markers);
-            this.map.setView([lat, lng], 12);
-            this.currentMarkers = this.addMarkers(this.map, this.markers);
+            this.replaceMarkers(this.markers);
         }
     },
     mounted() {
         this.initMap();
+        if (this.markers) {
+            this.replaceMarkers(this.markers);
+        }
     },
     methods: {
         initMap() {
@@ -49,6 +49,12 @@ export default {
                     .addTo(map)
                     .bindPopup(popupTemplate);
             });
+        },
+        replaceMarkers(newMarkers) {
+            this.removeMarkers(this.map, this.currentMarkers);
+            const {lat, lng} = head(newMarkers);
+            this.map.setView([lat, lng], 12);
+            this.currentMarkers = this.addMarkers(this.map, newMarkers);
         }
     }
 };
