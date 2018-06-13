@@ -1,78 +1,90 @@
 <template>
-  <el-container>
-    <el-header>
-      <div
-        :class="{open: showCardList}"
-        class="card-list-button el-icon-arrow-down"
-        @click="toggleDiveList"/>
-      <h1 class="header-title">Hermes</h1>
-    </el-header>
-    <el-container>
-      <el-aside
-        :class="{open: showCardList}"
-        width="250px"
-      >
-        <DiveList
-          :on-click="onDiveSelect"
-        />
-      </el-aside>
-      <el-main v-if="selectedDive">
-        <el-row
-          :gutter="20"
-          class="dive-info-row">
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="12"
-            :lg="12"
-            :xl="12">
-            <el-card class="dive-details-card">
-              <div slot="header">
-                <span class="dive-details-prop">Dive</span>&colon;&nbsp;
-                <span class="dive-details-value">{{ selectedDive.id }}</span>
+  <div class="dives">
+    <nav class="navbar is-dark">
+      <div class="navbar-brand">
+        <div class="navbar-item">
+          <h1 class="title has-text-white">Hermes</h1>
+        </div>
+        <a
+          :class="{'is-active': showCardList}"
+          role="button"
+          class="navbar-burger has-text-white is-hidden-tablet"
+          aria-label="menu"
+          aria-expanded="false"
+          @click="toggleDiveList()">
+          <span aria-hidden="true"/>
+          <span aria-hidden="true"/>
+          <span aria-hidden="true"/>
+        </a>
+      </div>
+    </nav>
+    <main class="dives-main">
+      <div class="dives-view-container columns is-variable is-1">
+        <aside
+          :class="{'is-hidden-mobile': !showCardList, 'is-active': showCardList}"
+          class="dive-list column is-narrow"
+        >
+          <DiveList
+            :on-click="onDiveSelect"
+          />
+        </aside>
+        <section
+          v-if="selectedDive"
+          class="dive-details column">
+          <div class="container">
+            <div class="tile is-ancestor">
+              <div class="tile is-vertical">
+                <div class="tile">
+                  <div class="tile is-6 is-vertical">
+                    <div class="tile is-parent">
+                      <div class="tile is-child card">
+                        <DiveInfoTable
+                          :dive="selectedDive"
+                          :prop-list="divePropList"/>
+                      </div>
+                    </div>
+                    <div class="tile is-parent">
+                      <div class="tile is-child card" >
+                        <DiveAnalyticsTable :analytics="diveAnalytics" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tile is-6 is-parent">
+                    <div class="tile is-child">
+                      <SimpleMap
+                        :markers="mapMarkers"
+                        style="height: 500px;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="tile is-parent">
+                  <div class="tile is-child card">
+                    <LineChart :chart-data="chartData" />
+                  </div>
+                </div>
               </div>
-              <div
-                v-for="item in divePropList"
-                :key="item.prop"
-                class="text item">
-                <span class="dive-details-prop">{{ item.prop }}</span>&colon;&nbsp;
-                <span class="dive-details-value">{{ item.value }}</span>
-              </div>
-            </el-card>
-            <DiveInfoTable :analytics="diveAnalytics" />
-          </el-col>
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="12"
-            :lg="12"
-            :xl="12"
-            class="map-container">
-            <el-card><SimpleMap
-              :markers="mapMarkers"
-              style="height: 500px;"
-            /></el-card>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-card>
-              <LineChart :chart-data="chartData" />
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
-      <el-main
-        v-if="!selectedDive"
-        class="empty">
-        <h1>Select a dive</h1>
-      </el-main>
-    </el-container>
-  </el-container>
+            </div>
+          </div>
+        </section>
+        <section
+          v-if="!selectedDive"
+          class="column empty">
+          <h1 class="title">Select a dive</h1>
+        </section>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
-import {DiveList, DiveInfoTable, LineChart, SimpleMap} from '~/components';
+import {
+    DiveList,
+    DiveInfoTable,
+    DiveAnalyticsTable,
+    LineChart,
+    SimpleMap
+} from '~/components';
 import isNumber from 'lodash/isNumber';
 import {fetchDive} from '~/api';
 
@@ -80,6 +92,7 @@ export default {
     components: {
         DiveList,
         DiveInfoTable,
+        DiveAnalyticsTable,
         LineChart,
         SimpleMap
     },
@@ -98,6 +111,7 @@ export default {
             this.showCardList = !this.showCardList;
         },
         onDiveSelect(dive) {
+            this.showCardList = false;
             fetchDive(dive.id).then(snapshot => {
                 const rows = snapshot.docs;
                 const {depth, temp1, temp2} = this.processDiveData(rows);
@@ -256,106 +270,59 @@ export default {
 };
 </script>
 
-<style>
-.el-container {
+<style lang="scss" scoped>
+.dives,
+.dives-view-container,
+.dive-list,
+.dive-details {
     height: 100%;
 }
 
-.el-header {
-    background-color: #486591;
-    color: #fff;
-    display: flex;
-    justify-content: start;
+.navbar {
+    height: 60px;
 }
 
-.el-header .header-title {
-    margin: 0 0 0 0.5em;
-    padding: 0;
-    line-height: 60px;
+.dives-main {
+    height: calc(100% - 60px);
 }
 
-.el-container .el-aside {
-    background-color: #e3f2fd;
-    color: #333;
-    text-align: center;
-    overflow-y: hidden;
-}
+.dives-view-container {
+    overflow: hidden;
+    margin-top: 0;
 
-.el-card {
-    margin: 1em 0;
-}
+    .dive-list {
+        padding-top: 0;
+        width: 250px;
+        max-width: 250px;
+        width: 14vw;
+        min-width: 150px;
 
-.el-container .card-list-button {
-    display: none;
-    transition: transform 100ms;
-}
-
-.card-list-button::before {
-    font-size: 2em;
-    line-height: 60px;
-    cursor: pointer;
-}
-
-.card-list-button.open {
-    transform: rotate(-90deg);
-}
-
-.el-container .dive-info-row {
-    display: flex;
-    align-items: center;
-}
-
-@media (max-width: 767px) {
-    .el-container .el-aside {
-        display: none;
+        &.is-active {
+            max-width: 100%;
+            width: 100%;
+        }
     }
 
-    .el-container .el-aside.open {
-        display: block;
-        width: 100% !important;
+    .dive-details {
+        padding-top: 4px;
     }
 
-    .el-container .card-list-button {
-        display: block;
+    .dive-details {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .el-container .dive-info-row {
-        display: block;
+    .empty {
+        display: flex;
+        justify-content: center;
+    }
+
+    .empty h1 {
+        padding: 5rem;
     }
 }
 
-.el-main {
-    background-color: #fff;
-    color: #333;
-}
-
-.card-container .el-card {
-    margin: 4px;
-    border: 1px solid #888;
-    background-color: #e3f2fd;
-    border-radius: 1px;
-}
-
-.card-container .el-card:hover {
-    background-color: #f3faff;
-}
-
-.dive-details-card {
-    font-size: 1.15em;
-    line-height: 1.5em;
-}
-
-.dive-details-prop {
-    font-weight: bold;
-}
-
-.empty {
-    display: flex;
-    justify-content: center;
-}
-
-.empty h1 {
-    font-size: 2em;
-    padding: 5em;
+.column {
+    padding-bottom: 0;
 }
 </style>

@@ -1,36 +1,39 @@
 <template>
-  <div class="dive-list">
-    <el-alert
-      v-if="pendingDives.length && showPopup"
-      title="Want to see new dives?"
-      type="info"
-      show-icon>
-      <p>
-        <el-button
-          size="mini"
-          round
-          type="success"
-          @click="seeNewDives()">Yes</el-button>
-        <el-button
-          size="mini"
-          round
-          type="danger"
-          @click="closePopup()">No</el-button>
-      </p>
-    </el-alert>
-    <div class="card-list">
-      <CardItem
-        v-for="dive in dives"
-        :key="dive.id"
-        :item="dive"
-        :on-click="onClick">
-        <div>
-          <strong>Dive</strong>
+  <div
+    class="dl-container">
+    <div
+      v-if="pendingDives.length"
+
+      class="dl-new-dives">
+      <div class="control">
+        <div class="tags has-addons">
+          <a
+            class="tag is-link"
+            @click="seeNewDives()">New Dives!</a>
+          <a
+            class="tag is-delete"
+            @click="closePopup()"/>
         </div>
-        <div>{{ dive.id }}</div>
-        <div>{{ dive.dateString }}</div>
-        <div>{{ dive.data.sampleCount }} samples</div>
-      </CardItem>
+      </div>
+    </div>
+    <div class="menu">
+      <ul class="menu-list">
+        <li
+          v-for="dive in dives"
+          :key="dive.id"
+        >
+          <CardItem
+            :class="{selected: selectedDiveId === dive.id}"
+            @click.native="onDiveSelect(dive)">
+            <div class="hp-card-title">
+              <strong>Dive</strong>
+            </div>
+            <div class="hp-card-text">{{ dive.id }}</div>
+            <div>{{ dive.dateString }}</div>
+            <div>{{ dive.data.sampleCount }} samples</div>
+          </CardItem>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -54,7 +57,7 @@ export default {
         return {
             dives: [],
             pendingDives: [],
-            showPopup: true
+            selectedDiveId: null
         };
     },
     mounted() {
@@ -93,15 +96,33 @@ export default {
         },
         closePopup() {
             this.pendingDives.length = 0;
-            this.showPopup = false;
+        },
+        onDiveSelect(dive) {
+            this.selectedDiveId = dive.id;
+            this.onClick(dive);
         }
     }
 };
 </script>
-<style>
-.dive-list {
+<style lang="scss" scoped>
+.dl-container {
+    height: 100%;
+}
+
+.menu {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     height: 100%;
+}
+
+.dl-new-dives {
+    .control {
+        margin: 0.25rem;
+    }
+}
+
+.selected {
+    background-color: #ededed;
+    box-shadow: none;
 }
 </style>

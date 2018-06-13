@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import App from './App.vue';
-import lang from 'element-ui/lib/locale/lang/en';
-import locale from 'element-ui/lib/locale';
 import './firebase';
 import 'element-ui/lib/theme-chalk/index.css';
 import L from 'leaflet';
@@ -12,35 +10,6 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 import 'leaflet/dist/leaflet.css';
-
-import {
-    Container,
-    Header,
-    Aside,
-    Main,
-    Row,
-    Col,
-    Card,
-    Table,
-    TableColumn,
-    Button,
-    Alert
-} from 'element-ui';
-
-Vue.use(Container);
-Vue.use(Header);
-Vue.use(Aside);
-Vue.use(Main);
-Vue.use(Row);
-Vue.use(Col);
-Vue.use(Card);
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Button);
-Vue.use(Alert);
-
-locale.use(lang);
-Vue.prototype.$ELEMENT = {locale};
 
 new Vue({
     el: '#app',

@@ -44,10 +44,21 @@ module.exports = {
             },
             {test: /\.html$/, use: ['html-loader']},
             {
-                test: /\.css$/,
-                use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader']
+                test: /\.(sass|scss|css)$/,
+                use: [
+                    'vue-style-loader',
+                    // MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            includePaths: [
+                                path.resolve(__dirname, './node_modules')
+                            ]
+                        }
+                    }
+                ]
             },
-            // file-loader(for images)
             {
                 test: /\.(jpg|png|gif|svg)$/,
                 use: [

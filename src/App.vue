@@ -11,7 +11,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import 'bulma/bulma.sass';
 body {
     margin: 0;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

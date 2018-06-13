@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/project-hermes/hermes-firebase#readme",
   "dependencies": {
+    "bulma": "^0.7.1",
     "element-ui": "^2.3.8",
     "firebase": "^5.0.3",
     "highcharts": "^6.1.0",
@@ -45,7 +46,9 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
     "prettier": "^1.12.1",
+    "sass-loader": "^7.0.2",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "vue-loader": "^15.0.9",

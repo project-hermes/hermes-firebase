@@ -1,34 +1,26 @@
 <template>
   <div
-    class="card-container"
-    @click="_onClick(item)">
-    <el-card shadow="hover">
-      <slot />
-    </el-card>
+    class="card"
+  >
+    <slot />
   </div>
 </template>
-<script>
-export default {
-    props: {
-        item: {
-            type: Object,
-            required: false,
-            default: () => ({})
-        },
-        onClick: {
-            required: true,
-            type: Function
-        }
-    },
-    methods: {
-        _onClick(item) {
-            this.onClick(item);
-        }
+<style lang="scss" scoped>
+.card {
+    padding: 1em;
+    margin: 4px;
+    border: 1px solid #888;
+    // background-color: #e3f2fd;
+    border-radius: 1px;
+    overflow-x: hidden;
+    &:hover {
+        cursor: pointer;
+        // background-color: #f3faff;
     }
-};
-</script>
-<style>
-.card-container:hover {
-    cursor: pointer;
+
+    .hp-card-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 </style>

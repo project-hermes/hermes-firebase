@@ -1,42 +1,33 @@
 <template>
-  <el-card class="dive-info-table">
-    <el-table
-      :data="analytics"
-      style="width: 100%">
-      <el-table-column
-        prop="prop"
-        label="Parameter"
-      />
-      <el-table-column
-        prop="max"
-        label="Max"
-      />
-      <el-table-column
-        prop="min"
-        label="Min"/>
-      <el-table-column
-        prop="avg"
-        label="Avg"/>
-    </el-table>
-  </el-card>
+  <div>
+    <header class="card-header">
+      <p class="card-header-title">
+        <span class="">Dive</span>&colon;&nbsp;
+        <span class="">{{ dive.id }}</span>
+      </p>
+    </header>
+    <div class="card-content">
+      <div
+        v-for="item in propList"
+        :key="item.prop">
+        <strong>{{ item.prop }}</strong>&colon;&nbsp;
+        <span>{{ item.value }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
     props: {
-        analytics: {
-            type: Array,
-            default: () => []
+        dive: {
+            type: Object,
+            default: () => ({})
         },
-        info: {
+        propList: {
             type: Array,
             default: () => []
         }
     }
 };
 </script>
-<style>
-.dive-info-table .cell {
-    font-size: 1.15em;
-}
-</style>
