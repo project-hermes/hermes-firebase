@@ -18,11 +18,11 @@
         </a>
       </div>
     </nav>
-    <main class="dives-main">
-      <div class="dives-view-container columns is-variable is-1">
+    <main class="dives__main">
+      <div class="dives__view columns is-variable is-1">
         <aside
           :class="{'is-hidden-mobile': !showCardList, 'is-active': showCardList}"
-          class="dive-list column is-narrow"
+          class="dives__list column is-narrow"
         >
           <DiveList
             :on-click="onDiveSelect"
@@ -30,7 +30,7 @@
         </aside>
         <section
           v-if="selectedDive"
-          class="dive-details column">
+          class="dives__details column">
           <div class="container">
             <div class="tile is-ancestor">
               <div class="tile is-vertical">
@@ -272,9 +272,9 @@ export default {
 
 <style lang="scss" scoped>
 .dives,
-.dives-view-container,
-.dive-list,
-.dive-details {
+.dives__view,
+.dives__list,
+.dives__details {
     height: 100%;
 }
 
@@ -282,15 +282,15 @@ export default {
     height: 60px;
 }
 
-.dives-main {
+.dives__main {
     height: calc(100% - 60px);
 }
 
-.dives-view-container {
+.dives__view {
     overflow: hidden;
     margin-top: 0;
 
-    .dive-list {
+    .dives__list {
         padding-top: 0;
         width: 250px;
         max-width: 250px;
@@ -303,11 +303,11 @@ export default {
         }
     }
 
-    .dive-details {
+    .dives__details {
         padding-top: 4px;
     }
 
-    .dive-details {
+    .dives__details {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
