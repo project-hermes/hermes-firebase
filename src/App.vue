@@ -1,15 +1,6 @@
 <template>
-  <Dives />
+  <router-view/>
 </template>
-
-<script>
-import Dives from './pages/Dives/Dives.vue';
-export default {
-    components: {
-        Dives
-    }
-};
-</script>
 
 <style lang="scss">
 @import 'bulma/bulma.sass';
@@ -20,7 +11,8 @@ body {
 }
 
 body,
-html {
+html,
+#app {
     height: 100%;
 }
 </style>
