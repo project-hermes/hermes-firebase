@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import router from '~/router';
+import store from '~/store';
 import App from './App.vue';
-import {Dives} from '~/pages';
 import './firebase';
 import 'element-ui/lib/theme-chalk/index.css';
 import L from 'leaflet';
@@ -13,19 +13,8 @@ L.Icon.Default.mergeOptions({
 });
 import 'leaflet/dist/leaflet.css';
 
-Vue.use(VueRouter);
-const router = new VueRouter({
-    mode: 'history',
-    routes: [
-        {path: '/', redirect: '/dives'},
-        {
-            path: '/dives',
-            component: Dives
-        }
-    ]
-});
-
 new Vue({
     router,
+    store,
     render: createEle => createEle(App)
 }).$mount('#app');

@@ -40,7 +40,7 @@
 <script>
 import sortBy from 'lodash/sortBy';
 import CardItem from '../CardItem/CardItem.vue';
-import {listenForDives} from '~/api';
+import {mapGetters, mapActions, mapMutations} from 'vuex';
 
 export default {
     components: {
@@ -55,25 +55,41 @@ export default {
     },
     data() {
         return {
-            dives: [],
-            pendingDives: [],
-            selectedDiveId: null
+            selectedDiveId: null,
+            pendingDives: []
         };
     },
-    mounted() {
-        listenForDives(snapshot => {
-            const newDives = [...snapshot.docs];
-            const oldDives = this.dives;
+    computed: {
+        ...mapGetters({
+            dives: 'dives/list'
+        }),
+        dives() {
+            const dives = this.$store.getters['dives/list'].map(dive => {
+                const date = dive.timeEnd.toDate();
+                return {
+                    data: dive,
+                    id: dive.id,
+                    dateValue: date.valueOf(),
+                    dateString: date.toLocaleString()
+                };
+            });
 
-            if (newDives.length === oldDives.length) return;
-            if (oldDives.length > 0) {
-                this.pendingDives = newDives;
-            } else {
-                this.dives = this.buildDivesFromDocs(newDives);
-            }
-        });
+            return sortBy(dives, ({dateValue}) => -dateValue);
+        }
+    },
+    mounted() {
+        this.listenForDives();
+    },
+    destroyed() {
+        this.unsubscribe();
     },
     methods: {
+        ...mapActions({
+            listenForDives: 'dives/listenForDives'
+        }),
+        ...mapMutations({
+            unsubscribe: 'dives/unsubscribe'
+        }),
         buildDivesFromDocs(dives) {
             const divesList = dives.map(diveDoc => {
                 const data = diveDoc.data();

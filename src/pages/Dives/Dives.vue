@@ -86,7 +86,7 @@ import {
     SimpleMap
 } from '~/components';
 import isNumber from 'lodash/isNumber';
-import {fetchDive} from '~/api';
+import {mapActions} from 'vuex';
 
 export default {
     components: {
@@ -107,13 +107,17 @@ export default {
         };
     },
     methods: {
+        ...mapActions({
+            fetchDiveData: 'dives/fetchDiveData'
+        }),
         toggleDiveList() {
             this.showCardList = !this.showCardList;
         },
         onDiveSelect(dive) {
             this.showCardList = false;
-            fetchDive(dive.id).then(snapshot => {
-                const rows = snapshot.docs;
+            const id = dive.id;
+            this.fetchDiveData(id).then(() => {
+                const rows = this.$store.getters['dives/getDiveDataById'](id);
                 const {depth, temp1, temp2} = this.processDiveData(rows);
                 this.chartData = this.buildChartData({
                     depthSeries: depth.series,
@@ -197,8 +201,7 @@ export default {
                 return map;
             }, {});
 
-            rows.forEach(row => {
-                const data = row.data();
+            rows.forEach(data => {
                 const {timestamp} = data;
                 const date = new Date(timestamp * 1000);
 
