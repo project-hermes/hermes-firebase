@@ -1,12 +1,5 @@
 <template>
   <div class="map">
-    <nav class="navbar is-dark">
-      <div class="navbar-brand">
-        <div class="navbar-item">
-          <h1 class="title has-text-white">Hermes</h1>
-        </div>
-      </div>
-    </nav>
     <main class="map__main">
       <div class="container">
         <SimpleMap

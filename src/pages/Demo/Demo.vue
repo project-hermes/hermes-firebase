@@ -1,12 +1,5 @@
 <template>
   <div class="demo">
-    <nav class="navbar is-dark">
-      <div class="navbar-brand">
-        <div class="navbar-item">
-          <h1 class="title has-text-white">Hermes</h1>
-        </div>
-      </div>
-    </nav>
     <main class="demo__main">
       <div class="container">
         <el-date-picker

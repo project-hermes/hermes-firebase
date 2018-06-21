@@ -1,27 +1,9 @@
 <template>
   <div class="dives">
-    <nav class="navbar is-dark">
-      <div class="navbar-brand">
-        <div class="navbar-item">
-          <h1 class="title has-text-white">Hermes</h1>
-        </div>
-        <a
-          :class="{'is-active': showCardList}"
-          role="button"
-          class="navbar-burger has-text-white is-hidden-tablet"
-          aria-label="menu"
-          aria-expanded="false"
-          @click="toggleDiveList()">
-          <span aria-hidden="true"/>
-          <span aria-hidden="true"/>
-          <span aria-hidden="true"/>
-        </a>
-      </div>
-    </nav>
     <main class="dives__main">
       <div class="dives__view columns is-variable is-1">
         <aside
-          :class="{'is-hidden-mobile': !showCardList, 'is-active': showCardList}"
+          :class="{'is-hidden-mobile': !showDiveList, 'is-active': showDiveList}"
           class="dives__list column is-narrow"
         >
           <DiveList
@@ -86,7 +68,7 @@ import {
     SimpleMap
 } from '~/components';
 import isNumber from 'lodash/isNumber';
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
     components: {
@@ -102,19 +84,21 @@ export default {
             chartData: {},
             diveAnalytics: [],
             divePropList: [],
-            mapMarkers: undefined,
-            showCardList: false
+            mapMarkers: undefined
         };
+    },
+    computed: {
+        ...mapGetters({
+            showDiveList: 'nav/isToggled'
+        })
     },
     methods: {
         ...mapActions({
-            fetchDiveData: 'dives/fetchDiveData'
+            fetchDiveData: 'dives/fetchDiveData',
+            toggleDiveListOff: 'nav/toggleOff',
+            showToggle: 'nav/showToggle'
         }),
-        toggleDiveList() {
-            this.showCardList = !this.showCardList;
-        },
         onDiveSelect(dive) {
-            this.showCardList = false;
             const id = dive.id;
             this.fetchDiveData(id).then(() => {
                 const rows = this.$store.getters['dives/getDiveDataById'](id);
@@ -132,7 +116,7 @@ export default {
                 ];
             });
 
-            this.showCardList = false;
+            this.toggleDiveListOff();
             this.selectedDive = dive;
             this.divePropList = this.buildPropList(dive.data);
             this.mapMarkers = this.createMapMarkers(dive.data);

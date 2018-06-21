@@ -1,14 +1,6 @@
 <template>
   <div class="charts">
-    <nav class="navbar is-dark">
-      <div class="navbar-brand">
-        <div class="navbar-item">
-          <h1 class="title has-text-white">Hermes</h1>
-        </div>
-        <main class="charts__main">
-        </main>
-      </div>
-    </nav>
+    <main class="charts__main"/>
   </div>
 </template>
 <script>

@@ -6,3 +6,4 @@ export {
 } from './DiveAnalyticsTable/DiveAnalyticsTable.vue';
 export {default as LineChart} from './LineChart/LineChart.vue';
 export {default as SimpleMap} from './SimpleMap/SimpleMap.vue';
+export {default as NavBar} from './NavBar/NavBar.vue';
