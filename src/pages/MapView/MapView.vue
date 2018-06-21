@@ -5,13 +5,24 @@
         <div class="navbar-item">
           <h1 class="title has-text-white">Hermes</h1>
         </div>
-        <main class="map__main">
-        </main>
       </div>
     </nav>
+    <main class="map__main">
+      <div class="container">
+        <SimpleMap
+          style="height: 800px;"
+        />
+      </div>
+    </main>
   </div>
 </template>
 <script>
+import {SimpleMap} from '~/components';
+export default {
+    components: {
+        SimpleMap
+    }
+};
 </script>
 <style lang="scss" scoped>
 </style>

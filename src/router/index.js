@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {Dives, MapView, ChartView} from '~/pages';
+import {Dives, MapView, ChartView, Demo} from '~/pages';
 Vue.use(VueRouter);
 const router = new VueRouter({
     mode: 'history',
@@ -17,6 +17,10 @@ const router = new VueRouter({
         {
             path: '/charts',
             component: ChartView
+        },
+        {
+            path: '/demo',
+            component: Demo
         }
     ]
 });
