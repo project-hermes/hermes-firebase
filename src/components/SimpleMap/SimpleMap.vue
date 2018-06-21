@@ -25,7 +25,7 @@ export default {
     },
     mounted() {
         this.initMap();
-        if (this.markers) {
+        if (this.markers.length) {
             this.replaceMarkers(this.markers);
         }
     },
