@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app__container">
     <NavBar :show-toggle="showToggle"/>
     <router-view/>
   </div>
@@ -37,7 +37,8 @@ body {
 
 body,
 html,
-#app {
+#app,
+.app__container {
     height: 100%;
 }
 </style>

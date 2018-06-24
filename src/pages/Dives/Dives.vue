@@ -1,62 +1,60 @@
 <template>
-  <div class="dives">
-    <main class="dives__main">
-      <div class="dives__view columns is-variable is-1">
-        <aside
-          :class="{'is-hidden-mobile': !showDiveList, 'is-active': showDiveList}"
-          class="dives__list column is-narrow"
-        >
-          <DiveList
-            :on-click="onDiveSelect"
-          />
-        </aside>
-        <section
-          v-if="selectedDive"
-          class="dives__details column">
-          <div class="container">
-            <div class="tile is-ancestor">
-              <div class="tile is-vertical">
-                <div class="tile">
-                  <div class="tile is-6 is-vertical">
-                    <div class="tile is-parent">
-                      <div class="tile is-child card">
-                        <DiveInfoTable
-                          :dive="selectedDive"
-                          :prop-list="divePropList"/>
-                      </div>
-                    </div>
-                    <div class="tile is-parent">
-                      <div class="tile is-child card" >
-                        <DiveAnalyticsTable :analytics="diveAnalytics" />
-                      </div>
+  <main class="dives__main">
+    <div class="dives__view columns is-variable is-1">
+      <aside
+        :class="{'is-hidden-mobile': !showDiveList, 'is-active': showDiveList}"
+        class="dives__list column is-narrow"
+      >
+        <DiveList
+          :on-click="onDiveSelect"
+        />
+      </aside>
+      <section
+        v-if="selectedDive"
+        class="dives__details column">
+        <div class="container">
+          <div class="tile is-ancestor">
+            <div class="tile is-vertical">
+              <div class="tile">
+                <div class="tile is-6 is-vertical">
+                  <div class="tile is-parent">
+                    <div class="tile is-child card">
+                      <DiveInfoTable
+                        :dive="selectedDive"
+                        :prop-list="divePropList"/>
                     </div>
                   </div>
-                  <div class="tile is-6 is-parent">
-                    <div class="tile is-child">
-                      <SimpleMap
-                        :markers="mapMarkers"
-                        style="height: 500px;"
-                      />
+                  <div class="tile is-parent">
+                    <div class="tile is-child card" >
+                      <DiveAnalyticsTable :analytics="diveAnalytics" />
                     </div>
                   </div>
                 </div>
-                <div class="tile is-parent">
-                  <div class="tile is-child card">
-                    <LineChart :chart-data="chartData" />
+                <div class="tile is-6 is-parent">
+                  <div class="tile is-child">
+                    <SimpleMap
+                      :markers="mapMarkers"
+                      style="height: 500px;"
+                    />
                   </div>
+                </div>
+              </div>
+              <div class="tile is-parent">
+                <div class="tile is-child card">
+                  <LineChart :chart-data="chartData" />
                 </div>
               </div>
             </div>
           </div>
-        </section>
-        <section
-          v-if="!selectedDive"
-          class="column empty">
-          <h1 class="title">Select a dive</h1>
-        </section>
-      </div>
-    </main>
-  </div>
+        </div>
+      </section>
+      <section
+        v-if="!selectedDive"
+        class="column empty">
+        <h1 class="title">Select a dive</h1>
+      </section>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -258,7 +256,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dives,
 .dives__view,
 .dives__list,
 .dives__details {
