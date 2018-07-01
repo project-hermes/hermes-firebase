@@ -1,14 +1,21 @@
 <template>
   <div
-    class="app__container">
+    class="app__view">
+    <NavBar
+      v-if="isAuthorized"
+      :show-toggle="showToggle"/>
     <router-view/>
   </div>
 </template>
 
 <script>
+import {NavBar} from '~/components';
 import {mapGetters} from 'vuex';
 
 export default {
+    components: {
+        NavBar
+    },
     data() {
         return {
             showToggle: false
@@ -16,7 +23,6 @@ export default {
     },
     computed: {
         ...mapGetters({
-            isReady: 'auth/isReady',
             isAuthorized: 'auth/isAuthorized'
         })
     },
@@ -28,10 +34,13 @@ export default {
             }
         }
     },
+    mounted() {
+        this.checkRoutes();
+    },
     methods: {
         checkRoutes() {
             // TODO: this sucks
-            // this.showToggle = this.$route.path === '/dives';
+            this.showToggle = this.$route.path === '/dives';
         }
     }
 };
@@ -48,7 +57,7 @@ body {
 body,
 html,
 #app,
-.app__container {
+.app__view {
     height: 100%;
 }
 </style>
