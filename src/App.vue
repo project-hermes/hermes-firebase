@@ -1,31 +1,9 @@
 <template>
-  <div class="app__container">
-    <NavBar :show-toggle="showToggle"/>
+  <div
+    class="app__container">
     <router-view/>
   </div>
 </template>
-
-<script>
-import {NavBar} from '~/components';
-export default {
-    components: {
-        NavBar
-    },
-    data() {
-        return {
-            showToggle: false
-        };
-    },
-    watchers: {
-        $route() {
-            this.showToggle = this.$route.path === '/dives';
-        }
-    },
-    mounted() {
-        this.showToggle = this.$route.path === '/dives';
-    }
-};
-</script>
 
 <style lang="scss">
 @import 'bulma/bulma.sass';
