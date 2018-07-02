@@ -47,14 +47,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    .navbar-brand {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-    }
+.navbar-brand {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
 
-    .user-button {
-        flex: none;
-
-    }
+.user-button {
+    flex: none;
+}
 </style>

@@ -24,7 +24,7 @@
           </button>
         </div>
         <div class="email-form">
-          <form @submit="signInWithEmailAndPassword">
+          <form @submit="signInWithEmailAndPassword({email, password})">
             <div class="field">
               <p class="control has-icons-left">
                 <input
@@ -61,11 +61,10 @@
   </main>
 </template>
 <script>
-import firebase from 'firebase/app';
 import googleButton from '~/img/google-sign-in-button.svg';
 import MailIcon from 'vue-feather-icons/icons/MailIcon';
 import LockIcon from 'vue-feather-icons/icons/LockIcon';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 
 export default {
     components: {
@@ -85,33 +84,10 @@ export default {
         })
     },
     methods: {
-        signInWithEmailAndPassword() {
-            return firebase
-                .auth()
-                .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-                .then(() => {
-                    return firebase
-                        .auth()
-                        .signInWithEmailAndPassword(this.email, this.password)
-                        .then(() => {
-                            // this.$router.push('/dives');
-                        });
-                });
-        },
-        signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            return firebase
-                .auth()
-                .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-                .then(() => {
-                    return firebase
-                        .auth()
-                        .signInWithPopup(provider)
-                        .then(() => {
-                            // this.$router.push('/dives');
-                        });
-                });
-        }
+        ...mapActions({
+            signInWithEmailAndPassword: 'auth/signInWithEmailAndPassword',
+            signInWithGoogle: 'auth/signInWithGoogle'
+        })
     }
 };
 </script>

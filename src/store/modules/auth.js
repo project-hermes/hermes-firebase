@@ -1,4 +1,8 @@
-import firebase from 'firebase/app';
+import {
+    signInWithEmailAndPassword,
+    signInWithGoogle,
+    signOut
+} from '~/api/auth';
 
 let resolve;
 const readyPromise = new Promise(res => {
@@ -27,7 +31,13 @@ export default {
             commit('setUser', user);
         },
         signOut() {
-            firebase.auth().signOut();
+            signOut();
+        },
+        signInWithEmailAndPassword(_, {email, password}) {
+            signInWithEmailAndPassword(email, password);
+        },
+        signInWithGoogle() {
+            signInWithGoogle();
         }
     },
     getters: {

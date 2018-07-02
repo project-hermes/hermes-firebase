@@ -5,38 +5,6 @@
   </div>
 </template>
 
-<script>
-import {mapGetters} from 'vuex';
-
-export default {
-    data() {
-        return {
-            showToggle: false
-        };
-    },
-    computed: {
-        ...mapGetters({
-            isReady: 'auth/isReady',
-            isAuthorized: 'auth/isAuthorized'
-        })
-    },
-    watchers: {
-        $route: {
-            immediate: true,
-            handler() {
-                this.checkRoutes();
-            }
-        }
-    },
-    methods: {
-        checkRoutes() {
-            // TODO: this sucks
-            // this.showToggle = this.$route.path === '/dives';
-        }
-    }
-};
-</script>
-
 <style lang="scss">
 @import 'bulma/bulma.sass';
 body {
