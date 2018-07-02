@@ -16,12 +16,17 @@
         <span aria-hidden="true"/>
         <span aria-hidden="true"/>
       </a>
+      <UserButton class="navbar-item" />
     </div>
   </nav>
 </template>
 <script>
 import {mapActions, mapGetters} from 'vuex';
+import {UserButton} from '~/components';
 export default {
+    components: {
+        UserButton
+    },
     props: {
         showToggle: {
             type: Boolean,
@@ -41,3 +46,15 @@ export default {
     }
 };
 </script>
+<style lang="scss" scoped>
+    .navbar-brand {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .user-button {
+        flex: none;
+
+    }
+</style>

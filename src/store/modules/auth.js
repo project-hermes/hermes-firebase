@@ -1,3 +1,5 @@
+import firebase from 'firebase/app';
+
 let resolve;
 const readyPromise = new Promise(res => {
     resolve = res;
@@ -23,6 +25,9 @@ export default {
         },
         userChanged({commit}, user) {
             commit('setUser', user);
+        },
+        signOut() {
+            firebase.auth().signOut();
         }
     },
     getters: {
