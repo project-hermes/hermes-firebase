@@ -24,10 +24,11 @@
           </button>
         </div>
         <div class="email-form">
-          <form @submit="signInWithEmailAndPassword({email, password})">
+          <form @submit.prevent="signInWithEmailAndPassword()">
             <div class="field">
               <p class="control has-icons-left">
                 <input
+                  v-model="email"
                   class="input"
                   type="email"
                   placeholder="Email">
@@ -36,9 +37,10 @@
                 </span>
               </p>
             </div>
-            <div class="field">
+            <div class="field password-field">
               <p class="control has-icons-left">
                 <input
+                  v-model="password"
                   class="input"
                   type="password"
                   placeholder="Password">
@@ -46,12 +48,23 @@
                   <LockIcon />
                 </span>
               </p>
+              <p class="help is-pulled-right sign-up">
+                <a
+                  class="button is-text is-small"
+                  @click="signUp">
+                  Sign Up
+                </a>
+              </p>
             </div>
             <div class="field">
               <p class="control">
-                <button class="button is-link">
+                <button
+                  class="button is-link">
                   Login
                 </button>
+              </p>
+              <p class="help is-danger">
+                {{ error }}
               </p>
             </div>
           </form>
@@ -75,7 +88,8 @@ export default {
         return {
             email: '',
             password: '',
-            googleButton
+            googleButton,
+            error: ''
         };
     },
     computed: {
@@ -85,9 +99,28 @@ export default {
     },
     methods: {
         ...mapActions({
-            signInWithEmailAndPassword: 'auth/signInWithEmailAndPassword',
-            signInWithGoogle: 'auth/signInWithGoogle'
-        })
+            authSignInWithEmailAndPassword: 'auth/signInWithEmailAndPassword',
+            authSignInWithGoogle: 'auth/signInWithGoogle',
+            signUp: 'auth/signUp'
+        }),
+        signInWithEmailAndPassword() {
+            this.authSignInWithEmailAndPassword({
+                email: this.email,
+                password: this.password
+            }).catch(err => {
+                this.error = err.message;
+            });
+            this.resetError();
+        },
+        signInWithGoogle() {
+            this.authSignInWithGoogle().catch(err => {
+                this.error = err.message;
+            });
+            this.resetError();
+        },
+        resetError() {
+            this.error = '';
+        }
     }
 };
 </script>
@@ -136,5 +169,11 @@ input:-webkit-autofill {
     margin-left: 6px;
     margin-right: 6px;
     vertical-align: top;
+}
+
+.password-field,
+.sign-up {
+    z-index: 1;
+    position: relative;
 }
 </style>

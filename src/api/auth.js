@@ -22,3 +22,8 @@ export function signInWithGoogle() {
 export function signOut() {
     return firebase.auth().signOut();
 }
+
+// TODO: displayName?
+export function createUser({email, password}) {
+    return firebase.auth().createUserWithEmailAndPassword(email, password);
+}
