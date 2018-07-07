@@ -14,13 +14,14 @@
       class="columns is-centered">
       <div class="column is-3">
         <div class="sign-up">
-          <form @submit="createdByUser">
-            <div
-              :class="{'is-valid': validDisplayName}"
+          <form @submit.prevent="createUser">
+            <!-- <div
               class="field">
               <p class="control has-icons-left">
                 <input
-                  v-model="displayName"
+                  v-model="form.displayName"
+                  :class="{'is-danger': form.displayName.length && !validDisplayName}"
+
                   class="input"
                   type="text"
                   placeholder="Display Name">
@@ -28,14 +29,13 @@
                   <UserIcon />
                 </span>
               </p>
-            </div>
+            </div> -->
             <div
-              :class="{'is-valid': validEmail}"
-
               class="field">
               <p class="control has-icons-left">
                 <input
-                  v-model="email"
+                  v-model="form.email"
+                  :class="{'is-danger': form.email.length && !validEmail}"
 
                   class="input"
                   type="email"
@@ -46,19 +46,22 @@
               </p>
             </div>
             <div
-              :class="{'is-valid': validPassword}"
-
               class="field">
               <p class="control has-icons-left">
                 <input
-                  v-model="password"
-
+                  v-model="form.password"
+                  :class="{'is-danger': form.password.length && !validPassword}"
                   class="input"
                   type="password"
                   placeholder="Password">
                 <span class="icon is-small is-left">
                   <LockIcon />
                 </span>
+              </p>
+              <p
+                v-if="form.password.length && !validPassword"
+                class="help is-danger">
+                Password must be at least 8 characters long and container 1 uppercase letter, 1 lowercase letter, and 1 number.
               </p>
             </div>
             <div class="field">
@@ -82,11 +85,10 @@ import MailIcon from 'vue-feather-icons/icons/MailIcon';
 import LockIcon from 'vue-feather-icons/icons/LockIcon';
 import UserIcon from 'vue-feather-icons/icons/UserIcon';
 import {mapActions} from 'vuex';
+import {validateEmail, validateDisplayName, validatePassword} from '~/util';
 
-// TODO: check bulma class for validation on input
-// TODO: determine what I want to make valid for each input.
-// TODO: do I need to explicitly sign in after creating a user?
-// Email validation?
+// TODO email verification
+// TODO username
 export default {
     components: {
         MailIcon,
@@ -105,13 +107,16 @@ export default {
     },
     computed: {
         validDisplayName() {
-            return this.form.displayName.length > 0;
+            return validateDisplayName(this.form.displayName);
         },
         validEmail() {
-            return this.form.email.length > 0;
+            return validateEmail(this.form.email);
         },
         validPassword() {
-            return this.form.password.length > 0;
+            return validatePassword(this.form.password);
+        },
+        validForm() {
+            return this.validEmail && this.validPassword;
         }
     },
     methods: {
@@ -120,7 +125,7 @@ export default {
             authSignInWithEmailAndPassword: 'auth/signInWithEmailAndPassword'
         }),
         createUser() {
-            if (this.isValid()) {
+            if (this.validForm) {
                 return this.authCreateUser(this.form)
                     .then(() => {
                         return this.authSignInWithEmailAndPassword(this.form);
@@ -129,10 +134,6 @@ export default {
                         this.error = err.message;
                     });
             }
-        },
-        isValid() {
-            const {validDisplayName, validEmail, validPassword} = this;
-            return validDisplayName && validEmail && validPassword;
         }
     }
 };
