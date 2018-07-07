@@ -1,6 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {Dives, MapView, ChartView, Demo, SignIn, NavView} from '~/pages';
+import {
+    Dives,
+    MapView,
+    ChartView,
+    Demo,
+    SignIn,
+    NavView,
+    SignUp
+} from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
 const readyPromise = store.getters['auth/readyPromise'];
@@ -18,6 +26,11 @@ const router = new VueRouter({
                 }
                 next();
             }
+        },
+        {
+            path: '/sign-up',
+            name: 'signUp',
+            component: SignUp
         },
         {
             path: '/',

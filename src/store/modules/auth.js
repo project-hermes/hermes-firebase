@@ -1,9 +1,10 @@
 import {
     signInWithEmailAndPassword,
     signInWithGoogle,
-    signOut
+    signOut,
+    createUser
 } from '~/api/auth';
-
+import router from '~/router';
 let resolve;
 const readyPromise = new Promise(res => {
     resolve = res;
@@ -34,10 +35,16 @@ export default {
             signOut();
         },
         signInWithEmailAndPassword(_, {email, password}) {
-            signInWithEmailAndPassword(email, password);
+            return signInWithEmailAndPassword(email, password);
         },
         signInWithGoogle() {
-            signInWithGoogle();
+            return signInWithGoogle();
+        },
+        signUp() {
+            router.push({name: 'signUp'});
+        },
+        createUser(_, params) {
+            return createUser(params);
         }
     },
     getters: {
