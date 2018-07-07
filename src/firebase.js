@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+
 import config from './firebase-config';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -38,7 +40,11 @@ firebase.auth().onAuthStateChanged(user => {
         store.dispatch('auth/userChanged', null);
     }
 
-    if (isLoggingIn(currentUser, user)) {
+    const pendingRoute = get(router, ['history', 'pending']);
+    if (
+        (pendingRoute === null || get(pendingRoute, 'name') === 'signIn') &&
+        isLoggingIn(currentUser, user)
+    ) {
         router.push('/dives');
     } else if (isLoggingOut(currentUser, user)) {
         router.push('/sign-in');

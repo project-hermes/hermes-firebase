@@ -35,7 +35,7 @@ const router = new VueRouter({
         {
             path: '/',
             component: NavView,
-            redirect: '/dives',
+            // redirect: '/dives',
             meta: {
                 requiresAuth: true
             },
