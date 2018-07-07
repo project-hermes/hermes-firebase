@@ -5,16 +5,17 @@
 <script>
 import L from 'leaflet';
 import head from 'lodash/head';
-import {
-  GeoSearchControl,
-  OpenStreetMapProvider,
-} from 'leaflet-geosearch';
+import {GeoSearchControl, OpenStreetMapProvider} from 'leaflet-geosearch';
 
 export default {
     props: {
         markers: {
             type: Array,
             default: () => []
+        },
+        view: {
+            type: String,
+            default: 'local'
         }
     },
     data() {
@@ -68,16 +69,34 @@ export default {
         },
         addMarkers(map, markerConfigs) {
             return markerConfigs.map(config => {
-                const {lat, lng, popupTemplate} = config;
-                return L.marker([lat, lng])
+                const {lat, lng, popupTemplate, id} = config;
+                let marker = L.marker([lat, lng])
                     .addTo(map)
-                    .bindPopup(popupTemplate);
+                    .on('click', () => {
+                        this.$emit('markerClick', id);
+                        this.$nextTick(() => {
+                            this.map.invalidateSize();
+                            this.map.setView(
+                                [lat, lng],
+                                this.view === 'global' ? 3 : 12
+                            );
+                        });
+                    });
+                marker = popupTemplate
+                    ? marker.bindPopup(popupTemplate)
+                    : marker;
+                return marker;
             });
         },
         replaceMarkers(newMarkers) {
             this.removeMarkers(this.map, this.currentMarkers);
-            const {lat, lng} = head(newMarkers);
-            this.map.setView([lat, lng], 12);
+            if (this.view === 'local') {
+                const {lat, lng} = head(newMarkers);
+                this.map.setView([lat, lng], 12);
+            } else if (this.view === 'global') {
+                this.map.setView([0, 0], 2);
+            }
+
             this.currentMarkers = this.addMarkers(this.map, newMarkers);
         }
     }

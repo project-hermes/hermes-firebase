@@ -23,10 +23,37 @@ export default {
         dive: {
             type: Object,
             default: () => ({})
-        },
-        propList: {
-            type: Array,
-            default: () => []
+        }
+    },
+    computed: {
+        propList() {
+            return Object.entries(this.dive).map(([prop, value]) => {
+                switch (prop) {
+                    case 'coordinateEnd':
+                    case 'coordinateStart':
+                        return {
+                            prop,
+                            value: `[${value.latitude}, ${value.longitude}]`
+                        };
+                    case 'createdAt':
+                    case 'lastUpdatedAt':
+                        return {
+                            prop,
+                            value: new Date(value).toLocaleString()
+                        };
+                    case 'timeEnd':
+                    case 'timeStart':
+                        return {
+                            prop,
+                            value: value.toDate().toLocaleString()
+                        };
+                    default:
+                        return {
+                            prop,
+                            value
+                        };
+                }
+            });
         }
     }
 };

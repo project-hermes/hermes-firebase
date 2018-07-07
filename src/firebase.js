@@ -45,7 +45,7 @@ firebase.auth().onAuthStateChanged(user => {
         (pendingRoute === null || get(pendingRoute, 'name') === 'signIn') &&
         isLoggingIn(currentUser, user)
     ) {
-        router.push('/dives');
+        router.push('/');
     } else if (isLoggingOut(currentUser, user)) {
         router.push('/sign-in');
     }

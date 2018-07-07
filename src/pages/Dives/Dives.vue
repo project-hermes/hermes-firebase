@@ -20,8 +20,7 @@
                   <div class="tile is-parent">
                     <div class="tile is-child card">
                       <DiveInfoTable
-                        :dive="selectedDive"
-                        :prop-list="divePropList"/>
+                        :dive="selectedDive.data"/>
                     </div>
                   </div>
                   <div class="tile is-parent">
@@ -81,7 +80,6 @@ export default {
             selectedDive: null,
             chartData: {},
             diveAnalytics: [],
-            divePropList: [],
             mapMarkers: undefined
         };
     },
@@ -116,7 +114,6 @@ export default {
 
             this.toggleDiveListOff();
             this.selectedDive = dive;
-            this.divePropList = this.buildPropList(dive.data);
             this.mapMarkers = this.createMapMarkers(dive.data);
         },
         createMapMarkers(diveData) {
@@ -140,35 +137,6 @@ export default {
                     popupTemplate: `Dive ended ${endDate}`
                 }
             ];
-        },
-        buildPropList(diveData) {
-            return Object.entries(diveData).map(([prop, value]) => {
-                switch (prop) {
-                    case 'coordinateEnd':
-                    case 'coordinateStart':
-                        return {
-                            prop,
-                            value: `[${value.latitude}, ${value.longitude}]`
-                        };
-                    case 'createdAt':
-                    case 'lastUpdatedAt':
-                        return {
-                            prop,
-                            value: new Date(value).toLocaleString()
-                        };
-                    case 'timeEnd':
-                    case 'timeStart':
-                        return {
-                            prop,
-                            value: value.toDate().toLocaleString()
-                        };
-                    default:
-                        return {
-                            prop,
-                            value
-                        };
-                }
-            });
         },
         processDiveData(rows) {
             const props = ['depth', 'temp1', 'temp2'];

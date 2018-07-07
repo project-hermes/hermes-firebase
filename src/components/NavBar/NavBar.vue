@@ -47,6 +47,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.navbar {
+    z-index: 500; // to beat leaflet
+}
+
 .navbar-brand {
     display: flex;
     justify-content: space-between;
