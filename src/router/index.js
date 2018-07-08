@@ -7,7 +7,8 @@ import {
     Demo,
     SignIn,
     NavView,
-    SignUp
+    SignUp,
+    MainView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -35,11 +36,15 @@ const router = new VueRouter({
         {
             path: '/',
             component: NavView,
-            // redirect: '/dives',
             meta: {
                 requiresAuth: true
             },
             children: [
+                {
+                    path: '/',
+                    name: 'main',
+                    component: MainView
+                },
                 {
                     path: '/dives',
                     name: 'dives',

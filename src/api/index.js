@@ -1,7 +1,13 @@
+import isArray from 'lodash/isArray';
 import {db} from '~/firebase';
 
-export function fetchDives() {
-    return db.collection('Dive').get();
+export function fetchDives({orderBy, limit} = {}) {
+    let query = db.collection('Dive');
+    query = orderBy
+        ? query.orderBy(...(isArray(orderBy) ? orderBy : [orderBy]))
+        : query;
+    query = limit ? query.limit(limit) : query;
+    return query.get();
 }
 
 export function fetchDive(id) {

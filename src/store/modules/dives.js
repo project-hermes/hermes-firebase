@@ -1,13 +1,14 @@
 import keys from 'lodash/keys';
 import map from 'lodash/map';
-import {fetchDive, listenForDives} from '~/api';
+import {fetchDive, listenForDives, fetchDives} from '~/api';
 
 export default {
     namespaced: true,
     state: {
         map: {},
         dataMap: {},
-        unsubscribe: null
+        unsubscribe: null,
+        local: {}
     },
     mutations: {
         addDive(state, doc) {
@@ -47,9 +48,27 @@ export default {
                 ...state.dataMap,
                 [id]: data
             };
+        },
+        addLocal(state, {key, diveIds}) {
+            state.local = {
+                ...state.local,
+                [key]: diveIds.map(id => state.map[id])
+            };
         }
     },
     actions: {
+        fetchLocalDives({commit, state}, {key, config}) {
+            return fetchDives(config).then(snapshot => {
+                const docs = [...snapshot.docs];
+                const diveIds = docs.map(doc => doc.id);
+                commit('addBatch', docs);
+                commit('addLocal', {
+                    key,
+                    diveIds
+                });
+                return state.local[key];
+            });
+        },
         listenForDives({commit}) {
             const unsubscribe = listenForDives(snapshot => {
                 const toAdd = [];
@@ -96,6 +115,9 @@ export default {
         },
         getDiveDataById(state) {
             return id => state.dataMap[id];
+        },
+        localList(state) {
+            return key => state.local[key];
         }
     }
 };
