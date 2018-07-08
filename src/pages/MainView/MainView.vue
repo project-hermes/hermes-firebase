@@ -1,22 +1,20 @@
 <template>
-  <div class="map">
-    <main class="map__main">
-      <div class="columns is-gapless">
-        <SimpleMap
-          :markers="mapMarkers"
-          view="global"
-          style="height: 800px;"
-          @markerClick="onMarkerClick"
-          class="column"
-        />
-        <DiveInfoTable
+  <main class="map__main">
+    <div class="map__container columns is-gapless">
+      <SimpleMap
+        :markers="mapMarkers"
+        view="global"
+        style="height: 100%;"
+        class="column"
+        @markerClick="onMarkerClick"
+      />
+      <DiveInfoTable
         v-if="selectedDive"
-          :dive="selectedDive"
-          class="column is-narrow"
-          />
-      </div>
-    </main>
-  </div>
+        :dive="selectedDive"
+        class="column is-narrow"
+      />
+    </div>
+  </main>
 </template>
 <script>
 import {SimpleMap, DiveInfoTable} from '~/components';
@@ -77,4 +75,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.map__main {
+    height: calc(100% - 60px);
+}
+
+.map__container {
+    height: 100%;
+}
 </style>
