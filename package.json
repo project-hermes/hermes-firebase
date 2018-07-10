@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config ./webpack.dev.js",
-    "building": "webpack --config ./webpack.dev.js  --watch",
+    "build:watch": "webpack --config ./webpack.dev.js  --watch",
     "build:prod": "webpack --config ./webpack.prod.js",
-    "lint": "eslint src --fix --ext .vue"
+    "lint": "eslint src --fix --ext .vue",
+    "browser-sync": "browser-sync start --proxy \"localhost:5000\" --files \"public/*\""
   },
   "repository": {
     "type": "git",
