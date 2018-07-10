@@ -1,6 +1,6 @@
 import keys from 'lodash/keys';
 import map from 'lodash/map';
-import {fetchDive, listenForDives, fetchDives} from '~/api';
+import {fetchDiveData, listenForDives, fetchDives, fetchDive} from '~/api';
 
 export default {
     namespaced: true,
@@ -69,6 +69,16 @@ export default {
                 return state.local[key];
             });
         },
+        fetchDive({commit, getters}, id) {
+            if (getters.getDiveById(id)) {
+                return Promise.resolve(getters.getDiveById(id));
+            }
+
+            return fetchDive(id).then(snapshot => {
+                commit('addBatch', [snapshot]);
+                return snapshot;
+            });
+        },
         listenForDives({commit}) {
             const unsubscribe = listenForDives(snapshot => {
                 const toAdd = [];
@@ -95,7 +105,7 @@ export default {
                 return Promise.resolve(getters.getDiveDataById(id));
             }
 
-            return fetchDive(id).then(snapshot => {
+            return fetchDiveData(id).then(snapshot => {
                 const rows = [];
                 snapshot.forEach(doc => {
                     rows.push(doc.data());

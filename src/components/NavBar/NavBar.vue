@@ -2,7 +2,13 @@
   <nav class="navbar is-dark">
     <div class="navbar-brand">
       <div class="navbar-item">
-        <h1 class="title has-text-white">Hermes</h1>
+        <router-link :to="{name: 'main'}">
+          <a>
+            <h1 class="title has-text-white">
+              Project Hermes
+            </h1>
+          </a>
+        </router-link>
       </div>
       <a
         v-if="showToggle"

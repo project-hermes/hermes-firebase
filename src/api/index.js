@@ -10,12 +10,16 @@ export function fetchDives({orderBy, limit} = {}) {
     return query.get();
 }
 
-export function fetchDive(id) {
+export function fetchDiveData(id) {
     return db
         .doc(`Dive/${id}`)
         .collection('data')
         .orderBy('timestamp')
         .get();
+}
+
+export function fetchDive(id) {
+    return db.doc(`Dive/${id}`).get();
 }
 
 export function listenForDives(cb) {

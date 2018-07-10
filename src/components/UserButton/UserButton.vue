@@ -8,12 +8,6 @@
       @blur="toggleOff"
     >
       <div class="dropdown-trigger">
-        <!-- <div
-          class="button"
-          aria-haspopup="true"
-          aria-controls="dropdown-menu2"> -->
-
-
         <img
           v-if="user.photoURL"
           :src="user.photoURL"
@@ -68,12 +62,6 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user'
-            // displayName,
-            // email,
-            // emailVerified,
-            // uid,
-            // photoURL,
-            // isAnonymous
         })
     },
     methods: {

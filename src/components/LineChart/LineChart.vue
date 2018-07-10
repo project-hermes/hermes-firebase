@@ -13,6 +13,14 @@ export default {
     },
     watch: {
         chartData() {
+            this.renderChart();
+        }
+    },
+    mounted() {
+        this.renderChart();
+    },
+    methods: {
+        renderChart() {
             Highcharts.chart('line-chart', {
                 chart: {
                     type: 'spline'
@@ -51,9 +59,6 @@ export default {
                 series: this.chartData.series
             });
         }
-    },
-    mounted() {
-        window.chartData = {};
     }
 };
 </script>

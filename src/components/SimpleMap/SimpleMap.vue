@@ -5,7 +5,7 @@
 <script>
 import L from 'leaflet';
 import head from 'lodash/head';
-import {GeoSearchControl, OpenStreetMapProvider} from 'leaflet-geosearch';
+// import {GeoSearchControl, OpenStreetMapProvider} from 'leaflet-geosearch';
 
 export default {
     props: {
@@ -35,6 +35,10 @@ export default {
         if (this.markers.length) {
             this.replaceMarkers(this.markers);
         }
+    },
+    beforeDestroy() {
+        this.map.off();
+        this.map.remove();
     },
     methods: {
         initMap() {

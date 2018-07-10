@@ -8,28 +8,39 @@
         class="column"
         @markerClick="onMarkerClick"
       />
-      <DiveInfoTable
-        v-if="selectedDive"
-        :dive="selectedDive"
-        class="column is-narrow"
-      />
+      <section class="map__details" v-if="selectedDive">
+        <DiveInfoTable
+          :dive="selectedDive"
+          class="column is-narrow"
+        />
+
+        <div class="buttons is-right">
+          <router-link :to="diveRoute" class="button is-text">
+              <BarChartIcon />
+              See Data
+          </router-link>
+        </div>
+      </section>
     </div>
   </main>
 </template>
 <script>
 import {SimpleMap, DiveInfoTable} from '~/components';
 import {mapActions} from 'vuex';
+import BarChartIcon from 'vue-feather-icons/icons/BarChartIcon';
 
 export default {
     components: {
         SimpleMap,
-        DiveInfoTable
+        DiveInfoTable,
+        BarChartIcon
     },
     data() {
         return {
             key: 'MainView',
             mapMarkers: undefined,
-            selectedDive: undefined
+            selectedDive: undefined,
+            diveRoute: {}
         };
     },
     computed: {
@@ -70,6 +81,12 @@ export default {
             this.selectedDive = this.$store.getters['dives/getDiveById'](
                 diveId
             );
+            this.diveRoute = {
+                name: 'diveDetails',
+                params: {
+                    id: diveId
+                }
+            };
         }
     }
 };
@@ -81,5 +98,9 @@ export default {
 
 .map__container {
     height: 100%;
+}
+
+.map__details {
+    padding: 1rem;
 }
 </style>

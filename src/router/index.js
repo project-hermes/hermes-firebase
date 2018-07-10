@@ -8,7 +8,8 @@ import {
     SignIn,
     NavView,
     SignUp,
-    MainView
+    MainView,
+    DiveDetails
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -49,6 +50,12 @@ const router = new VueRouter({
                     path: '/dives',
                     name: 'dives',
                     component: Dives
+                },
+                {
+                    path: '/dives/:id',
+                    name: 'diveDetails',
+                    component: DiveDetails,
+                    props: true
                 },
                 {
                     path: '/map',
