@@ -11,7 +11,6 @@
         </router-link>
       </div>
       <a
-        v-if="showToggle"
         :class="{'is-active': isToggled}"
         role="button"
         class="navbar-burger has-text-white"
@@ -52,13 +51,6 @@ export default {
     components: {
         UserButton,
         ListIcon
-    },
-    props: {
-        showToggle: {
-            type: Boolean,
-            default: false,
-            required: false
-        }
     },
     computed: {
         ...mapGetters({

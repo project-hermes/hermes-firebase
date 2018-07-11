@@ -2,8 +2,7 @@
   <div
     class="app__view">
     <NavBar
-      v-if="isAuthorized"
-      :show-toggle="showToggle"/>
+      v-if="isAuthorized"/>
     <router-view/>
   </div>
 </template>
@@ -16,32 +15,10 @@ export default {
     components: {
         NavBar
     },
-    data() {
-        return {
-            showToggle: false
-        };
-    },
     computed: {
         ...mapGetters({
             isAuthorized: 'auth/isAuthorized'
         })
-    },
-    watchers: {
-        $route: {
-            immediate: true,
-            handler() {
-                this.checkRoutes();
-            }
-        }
-    },
-    mounted() {
-        this.checkRoutes();
-    },
-    methods: {
-        checkRoutes() {
-            // TODO: this sucks
-            this.showToggle = this.$route.path === '/dives';
-        }
     }
 };
 </script>
