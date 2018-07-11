@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import {
     Dives,
+    DiveList,
     MapView,
     ChartView,
     Demo,
@@ -47,9 +48,13 @@ const router = new VueRouter({
                     component: MainView
                 },
                 {
+                    path: '/quick',
+                    component: Dives
+                },
+                {
                     path: '/dives',
                     name: 'dives',
-                    component: Dives
+                    component: DiveList
                 },
                 {
                     path: '/dives/:id',

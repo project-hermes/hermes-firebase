@@ -69,6 +69,12 @@ export default {
                 return state.local[key];
             });
         },
+        fetchDives({commit}, {config}) {
+            return fetchDives(config).then(snapshot => {
+                const docs = [...snapshot.docs];
+                commit('addBatch', docs);
+            });
+        },
         fetchDive({commit, getters}, id) {
             if (getters.getDiveById(id)) {
                 return Promise.resolve(getters.getDiveById(id));
@@ -127,7 +133,7 @@ export default {
             return id => state.dataMap[id];
         },
         localList(state) {
-            return key => state.local[key];
+            return key => state.local[key] || [];
         }
     }
 };

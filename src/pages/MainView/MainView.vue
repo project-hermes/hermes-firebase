@@ -5,20 +5,24 @@
         :markers="mapMarkers"
         view="global"
         style="height: 100%;"
-        class="column"
+        class="column map__map"
         @markerClick="onMarkerClick"
       />
-      <section class="map__details" v-if="selectedDive">
-        <DiveInfoTable
-          :dive="selectedDive"
-          class="column is-narrow"
-        />
-
-        <div class="buttons is-right">
-          <router-link :to="diveRoute" class="button is-text">
+      <section
+        v-if="selectedDive"
+        class="map__details">
+        <div class="column is-narrow">
+          <DiveInfoTable
+            :dive="selectedDive"
+          >
+            <router-link
+              slot="footer"
+              :to="diveRoute"
+              class="map__details-button button is-text">
               <BarChartIcon />
               See Data
-          </router-link>
+            </router-link>
+          </DiveInfoTable>
         </div>
       </section>
     </div>
@@ -102,5 +106,9 @@ export default {
 
 .map__details {
     padding: 1rem;
+}
+
+.map__details-button {
+    width: 100%;
 }
 </style>
