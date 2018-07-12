@@ -9,6 +9,10 @@ import head from 'lodash/head';
 
 export default {
     props: {
+        value: {
+            type: String,
+            default: undefined
+        },
         markers: {
             type: Array,
             default: () => []
@@ -27,6 +31,13 @@ export default {
     watch: {
         markers() {
             this.replaceMarkers(this.markers);
+            this.focusSelectedMarker(this.value);
+        },
+        value: {
+            immediate: true,
+            handler(id) {
+                this.focusSelectedMarker(id);
+            }
         }
     },
     mounted() {
@@ -77,7 +88,7 @@ export default {
                 let marker = L.marker([lat, lng])
                     .addTo(map)
                     .on('click', () => {
-                        this.$emit('markerClick', id);
+                        this.$emit('input', id);
                         this.$nextTick(() => {
                             this.map.invalidateSize();
                             this.map.setView(
@@ -102,6 +113,19 @@ export default {
             }
 
             this.currentMarkers = this.addMarkers(this.map, newMarkers);
+        },
+        focusSelectedMarker(id) {
+            const marker = this.markers.find(marker => marker.id === id);
+            if (marker) {
+                const {lat, lng} = marker;
+                this.$nextTick(() => {
+                    this.map.invalidateSize();
+                    this.map.setView(
+                        [lat, lng],
+                        this.view === 'global' ? 3 : 12
+                    );
+                });
+            }
         }
     }
 };

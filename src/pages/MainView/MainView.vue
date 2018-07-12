@@ -2,11 +2,11 @@
   <main class="map__main">
     <div class="map__container columns is-gapless">
       <SimpleMap
+        v-model="selectedDiveId"
         :markers="mapMarkers"
         view="global"
         style="height: 100%;"
         class="column map__map"
-        @markerClick="onMarkerClick"
       />
       <section
         v-if="selectedDive"
@@ -43,14 +43,40 @@ export default {
         return {
             key: 'MainView',
             mapMarkers: undefined,
-            selectedDive: undefined,
-            diveRoute: {}
+            selectedDiveId: undefined
         };
     },
     computed: {
         dives() {
             const dives = this.$store.getters['dives/localList'](this.key);
             return dives;
+        },
+        selectedDive() {
+            return this.$store.getters['dives/getDiveById'](
+                this.selectedDiveId
+            );
+        },
+        diveRoute() {
+            return {
+                name: 'diveDetails',
+                params: {
+                    id: this.selectedDiveId
+                }
+            };
+        }
+    },
+    watch: {
+        selectedDiveId() {
+            this.$router.push({
+                name: 'main',
+                query: {diveId: this.selectedDiveId}
+            });
+        },
+        '$route.query.diveId': {
+            immediate: true,
+            handler(diveId) {
+                this.selectedDiveId = diveId;
+            }
         }
     },
     mounted() {
@@ -61,6 +87,9 @@ export default {
             }
         }).then(dives => {
             this.mapMarkers = this.createMapMarkers(dives);
+            if (this.$route.query.diveId) {
+                // this.selectedDiveId = this.$route.query.diveId;
+            }
         });
     },
     methods: {
@@ -80,17 +109,6 @@ export default {
                     id
                 };
             });
-        },
-        onMarkerClick(diveId) {
-            this.selectedDive = this.$store.getters['dives/getDiveById'](
-                diveId
-            );
-            this.diveRoute = {
-                name: 'diveDetails',
-                params: {
-                    id: diveId
-                }
-            };
         }
     }
 };
