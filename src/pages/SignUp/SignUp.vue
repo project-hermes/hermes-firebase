@@ -32,6 +32,7 @@
             </div> -->
             <div
               class="field">
+              <label class="label">Email</label>
               <p class="control has-icons-left">
                 <input
                   v-model="form.email"
@@ -47,6 +48,7 @@
             </div>
             <div
               class="field">
+              <label class="label">Password</label>
               <p class="control has-icons-left">
                 <input
                   v-model="form.password"

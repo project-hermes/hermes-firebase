@@ -19,6 +19,7 @@
             @click="signInWithGoogle">
             <img
               :src="googleButton"
+              alt="Google logo"
               class="google-logo" >
             <span class="google-text">Sign in with Google</span>
           </button>
@@ -26,6 +27,7 @@
         <div class="email-form">
           <form @submit.prevent="signInWithEmailAndPassword()">
             <div class="field">
+              <label class="label">Email</label>
               <p class="control has-icons-left">
                 <input
                   v-model="email"
@@ -38,6 +40,7 @@
               </p>
             </div>
             <div class="field password-field">
+              <label class="label">Password</label>
               <p class="control has-icons-left">
                 <input
                   v-model="password"
@@ -160,7 +163,7 @@ input:-webkit-autofill {
 }
 
 .google-text {
-    color: #757575;
+    color: #575757;
     font-size: 16px;
     line-height: 48px;
     font-family: Roboto, arial, sans-serif;
