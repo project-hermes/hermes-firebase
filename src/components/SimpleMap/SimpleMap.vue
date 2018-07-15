@@ -88,13 +88,18 @@ export default {
                 let marker = L.marker([lat, lng])
                     .addTo(map)
                     .on('click', () => {
-                        this.$emit('input', id);
                         this.$nextTick(() => {
                             this.map.invalidateSize();
                             this.map.setView(
                                 [lat, lng],
                                 this.view === 'global' ? 3 : 12
                             );
+
+                            // emitting this immediately conficts with leaflet's
+                            // zoom animation for some reason.
+                            setTimeout(() => {
+                                this.$emit('input', id);
+                            }, 50);
                         });
                     });
                 marker = popupTemplate

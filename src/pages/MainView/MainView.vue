@@ -1,30 +1,25 @@
 <template>
   <main class="map__main">
-    <div class="map__container columns is-gapless">
+    <div class="map__container ">
       <SimpleMap
         v-model="selectedDiveId"
         :markers="mapMarkers"
         view="global"
-        style="height: 100%;"
-        class="column map__map"
+        class="map__map"
       />
-      <section
-        v-if="selectedDive"
-        class="map__details">
-        <div class="column is-narrow">
-          <DiveInfoTable
-            :dive="selectedDive"
-          >
-            <router-link
-              slot="footer"
-              :to="diveRoute"
-              class="map__details-button button is-text">
-              <BarChartIcon />
-              See Data
-            </router-link>
-          </DiveInfoTable>
-        </div>
-      </section>
+      <DiveInfoTable
+        v-show="selectedDive"
+        :dive="selectedDive"
+        class="map__details"
+      >
+        <router-link
+          slot="footer"
+          :to="diveRoute"
+          class="map__details-button button is-text">
+          <BarChartIcon />
+          See Data
+        </router-link>
+      </DiveInfoTable>
     </div>
   </main>
 </template>
@@ -122,11 +117,46 @@ export default {
     height: 100%;
 }
 
+.map__map {
+    height: 100%;
+}
+
 .map__details {
-    padding: 1rem;
+    position: absolute;
+    z-index: 499;
+    right: 1rem;
+    top: calc(52px + 1rem);
 }
 
 .map__details-button {
     width: 100%;
+}
+
+@media all and (max-width: 768px) {
+    .map__map {
+        height: 65%;
+    }
+
+    .map__details {
+        position: relative;
+        top: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+
+        /deep/ .card-header {
+            order: 0;
+        }
+
+        /deep/ .card-content {
+            order: 2;
+        }
+
+        /deep/ .card-footer {
+            order: 1;
+            border-bottom: 1px solid #dbdbdb;
+        }
+    }
 }
 </style>
