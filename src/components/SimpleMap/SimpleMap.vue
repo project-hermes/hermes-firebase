@@ -54,11 +54,21 @@ export default {
     methods: {
         initMap() {
             this.map = L.map('simple-map');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution:
-                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(this.map);
+            // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            //     maxZoom: 18,
+            //     attribution:
+            //         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            // }).addTo(this.map);
+
+            L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+                {
+                    attribution:
+                        'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+                    maxZoom: 16
+                }
+            ).addTo(this.map);
+
             this.map.scrollWheelZoom.disable();
 
             // var bounds = [[54.559322, -5.767822], [56.1210604, -3.021240]];
@@ -90,10 +100,7 @@ export default {
                     .on('click', () => {
                         this.$nextTick(() => {
                             this.map.invalidateSize();
-                            this.map.setView(
-                                [lat, lng],
-                                this.view === 'global' ? 3 : 12
-                            );
+                            this.map.setView([lat, lng], this.getZoom());
 
                             // emitting this immediately conficts with leaflet's
                             // zoom animation for some reason.
@@ -114,7 +121,7 @@ export default {
                 const {lat, lng} = head(newMarkers);
                 this.map.setView([lat, lng], 12);
             } else if (this.view === 'global') {
-                this.map.setView([0, 0], 2);
+                this.map.setView([0, 0], 3);
             }
 
             this.currentMarkers = this.addMarkers(this.map, newMarkers);
@@ -125,12 +132,15 @@ export default {
                 const {lat, lng} = marker;
                 this.$nextTick(() => {
                     this.map.invalidateSize();
-                    this.map.setView(
-                        [lat, lng],
-                        this.view === 'global' ? 3 : 12
-                    );
+                    this.map.setView([lat, lng], this.getZoom());
                 });
             }
+        },
+        getZoom() {
+            if (!this.map) return;
+            const zoom = this.map.getZoom();
+            const defaultZoom = this.view === 'global' ? 4 : 12;
+            return zoom > defaultZoom ? zoom : defaultZoom;
         }
     }
 };
