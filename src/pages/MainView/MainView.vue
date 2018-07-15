@@ -1,27 +1,25 @@
 <template>
-  <main class="map__main">
-    <div class="map__container ">
-      <SimpleMap
-        v-model="selectedDiveId"
-        :markers="mapMarkers"
-        view="global"
-        class="map__map"
-      />
-      <DiveInfoTable
-        v-show="selectedDive"
-        :dive="selectedDive"
-        class="map__details"
-      >
-        <router-link
-          slot="footer"
-          :to="diveRoute"
-          class="map__details-button button is-text">
-          <BarChartIcon />
-          See Data
-        </router-link>
-      </DiveInfoTable>
-    </div>
-  </main>
+  <div class="map__container">
+    <SimpleMap
+      v-model="selectedDiveId"
+      :markers="mapMarkers"
+      view="global"
+      class="map__map"
+    />
+    <DiveInfoTable
+      v-show="selectedDive"
+      :dive="selectedDive"
+      class="map__details"
+    >
+      <router-link
+        slot="footer"
+        :to="diveRoute"
+        class="map__details-button button is-text">
+        <BarChartIcon />
+        See Data
+      </router-link>
+    </DiveInfoTable>
+  </div>
 </template>
 <script>
 import {SimpleMap, DiveInfoTable} from '~/components';
@@ -109,14 +107,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.map__main {
-    height: calc(100% - 60px);
-}
-
-.map__container {
-    height: 100%;
-}
-
+.map__container,
 .map__map {
     height: 100%;
 }

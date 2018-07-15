@@ -1,5 +1,5 @@
 <template>
-  <main
+  <div
     v-loading="isLoading"
     class="dive-list container">
     <div
@@ -13,7 +13,7 @@
         />
       </router-link>
     </div>
-  </main>
+  </div>
 </template>
 <script>
 import sortBy from 'lodash/sortBy';
@@ -71,7 +71,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dive-list {
-    height: calc(100% - 60px);
+    height: 100%;
 }
 
 .dive-list__item {

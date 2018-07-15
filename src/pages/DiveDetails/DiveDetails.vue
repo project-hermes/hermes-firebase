@@ -1,51 +1,48 @@
 <template>
-  <main class="dives__main">
-
-    <div class="container">
-      <div class="tile is-ancestor">
-        <div class="tile is-vertical">
-          <div class="tile">
-            <div class="tile is-6 is-vertical">
-              <div class="tile is-parent">
-                <div
-                  v-loading="diveLoading"
-                  class="tile is-child card">
-                  <DiveInfoTable
-                    :dive="dive"/>
-                </div>
-              </div>
-              <div class="tile is-parent">
-                <div
-                  v-loading="dataLoading"
-                  class="tile is-child card" >
-                  <DiveAnalyticsTable
-                    :analytics="diveAnalytics" />
-                </div>
-              </div>
-            </div>
-            <div class="tile is-6 is-parent">
+  <div class="dive-details container">
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical">
+        <div class="tile">
+          <div class="tile is-6 is-vertical">
+            <div class="tile is-parent">
               <div
                 v-loading="diveLoading"
-                class="tile is-child">
-                <SimpleMap
-                  :markers="mapMarkers"
-                  style="height: 500px;"
-                />
+                class="tile is-child card">
+                <DiveInfoTable
+                  :dive="dive"/>
+              </div>
+            </div>
+            <div class="tile is-parent">
+              <div
+                v-loading="dataLoading"
+                class="tile is-child card" >
+                <DiveAnalyticsTable
+                  :analytics="diveAnalytics" />
               </div>
             </div>
           </div>
-          <div class="tile is-parent">
+          <div class="tile is-6 is-parent">
             <div
-              v-loading="dataLoading"
-              class="tile is-child card">
-              <LineChart
-                :chart-data="chartData" />
+              v-loading="diveLoading"
+              class="tile is-child">
+              <SimpleMap
+                :markers="mapMarkers"
+                style="height: 500px;"
+              />
             </div>
+          </div>
+        </div>
+        <div class="tile is-parent">
+          <div
+            v-loading="dataLoading"
+            class="tile is-child card">
+            <LineChart
+              :chart-data="chartData" />
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -240,8 +237,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dives__main {
-    height: calc(100% - 60px);
+.dive-details {
+    height: 100%;
     padding: 1rem 0;
 }
 </style>

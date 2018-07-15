@@ -3,7 +3,9 @@
     class="app__view">
     <NavBar
       v-if="isAuthorized"/>
-    <router-view/>
+    <main class="app__main">
+      <router-view/>
+    </main>
   </div>
 </template>
 
@@ -36,5 +38,10 @@ html,
 #app,
 .app__view {
     height: 100%;
+}
+
+.app__main {
+    height: calc(100% - 52px);
+    overflow-y: auto;
 }
 </style>
