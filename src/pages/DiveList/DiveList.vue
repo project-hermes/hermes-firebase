@@ -1,7 +1,9 @@
 <template>
-  <main class="container">
+  <main
+    v-loading="isLoading"
+    class="dive-list container">
     <div
-      v-for="dive in diveItem"
+      v-for="dive in diveItems"
       :key="dive.id"
       class="dive-list__item">
       <router-link :to="{name: 'diveDetails', params: {id: dive.id}}">
@@ -30,11 +32,12 @@ export default {
                 Time: 'timeStart',
                 Location: 'coordinateStart',
                 'Sample Count': 'sampleCount'
-            }
+            },
+            isLoading: true
         };
     },
     computed: {
-        diveItem() {
+        diveItems() {
             const dives = this.$store.getters['dives/localList'](this.key).map(
                 dive => {
                     const date = dive.timeStart.toDate();
@@ -49,11 +52,14 @@ export default {
         }
     },
     mounted() {
+        this.isLoading = this.diveItems.length === 0;
         this.fetchLocalDives({
             key: this.key,
             config: {
                 limit: 50
             }
+        }).then(() => {
+            this.isLoading = false;
         });
     },
     methods: {
@@ -64,6 +70,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.dive-list {
+    height: calc(100% - 60px);
+}
+
 .dive-list__item {
     margin: 1rem;
 
