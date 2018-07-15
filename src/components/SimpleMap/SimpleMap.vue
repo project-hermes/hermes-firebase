@@ -154,7 +154,7 @@ export default {
         },
         getDefaultZoom() {
             // const localZoom = this.maxZoom - 4;
-            return this.view === 'global' ? 4 : 5;
+            return this.view === 'global' ? 3 : 5;
         }
     }
 };
