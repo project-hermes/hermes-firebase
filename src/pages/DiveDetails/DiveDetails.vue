@@ -9,7 +9,6 @@
               <div class="tile is-parent">
                 <div
                   v-loading="diveLoading"
-
                   class="tile is-child card">
                   <DiveInfoTable
                     :dive="dive"/>
@@ -27,7 +26,6 @@
             <div class="tile is-6 is-parent">
               <div
                 v-loading="diveLoading"
-
                 class="tile is-child">
                 <SimpleMap
                   :markers="mapMarkers"
@@ -39,7 +37,6 @@
           <div class="tile is-parent">
             <div
               v-loading="dataLoading"
-
               class="tile is-child card">
               <LineChart
                 :chart-data="chartData" />

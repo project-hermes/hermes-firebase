@@ -10,12 +10,11 @@
     padding: 1em;
     margin: 4px;
     border: 1px solid #888;
-    // background-color: #e3f2fd;
     border-radius: 1px;
     overflow-x: hidden;
+
     &:hover {
         cursor: pointer;
-        // background-color: #f3faff;
     }
 
     .hp-card-text {

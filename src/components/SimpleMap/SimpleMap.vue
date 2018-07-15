@@ -25,7 +25,8 @@ export default {
     data() {
         return {
             map: null,
-            currentMarkers: []
+            currentMarkers: [],
+            maxZoom: 13
         };
     },
     watch: {
@@ -60,12 +61,21 @@ export default {
             //         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             // }).addTo(this.map);
 
+            // L.tileLayer(
+            //     'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+            //     {
+            //         attribution:
+            //             'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+            //         maxZoom: 16
+            //     }
+            // ).addTo(this.map);
+            this.maxZoom = 13;
             L.tileLayer(
-                'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+                'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
                 {
                     attribution:
-                        'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
-                    maxZoom: 16
+                        'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
+                    maxZoom: this.maxZoom
                 }
             ).addTo(this.map);
 
@@ -119,9 +129,9 @@ export default {
             this.removeMarkers(this.map, this.currentMarkers);
             if (this.view === 'local') {
                 const {lat, lng} = head(newMarkers);
-                this.map.setView([lat, lng], 12);
+                this.map.setView([lat, lng], this.getDefaultZoom());
             } else if (this.view === 'global') {
-                this.map.setView([0, 0], 3);
+                this.map.setView([0, 0], this.getDefaultZoom());
             }
 
             this.currentMarkers = this.addMarkers(this.map, newMarkers);
@@ -139,8 +149,12 @@ export default {
         getZoom() {
             if (!this.map) return;
             const zoom = this.map.getZoom();
-            const defaultZoom = this.view === 'global' ? 4 : 12;
+            const defaultZoom = this.getDefaultZoom();
             return zoom > defaultZoom ? zoom : defaultZoom;
+        },
+        getDefaultZoom() {
+            // const localZoom = this.maxZoom - 4;
+            return this.view === 'global' ? 4 : 5;
         }
     }
 };
