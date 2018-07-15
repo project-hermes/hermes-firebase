@@ -27,7 +27,7 @@
               class="tile is-child">
               <SimpleMap
                 :markers="mapMarkers"
-                style="height: 500px;"
+                style="height: 550px;"
               />
             </div>
           </div>
