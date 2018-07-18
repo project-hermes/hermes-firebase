@@ -7,7 +7,7 @@
       class="map__map"
     />
     <DiveInfoTable
-      v-show="selectedDive"
+      v-if="selectedDive"
       :dive="selectedDive"
       class="map__details"
     >
