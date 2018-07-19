@@ -10,8 +10,8 @@
       <div
         v-for="item in propList"
         :key="item.prop">
-        <strong>{{ item.prop }}</strong>&colon;&nbsp;
-        <span>{{ item.value }}</span>
+        <label class="dit__label">{{ item.prop }}</label>&colon;&nbsp;
+        <span class="dit__val">{{ item.value }}</span>
       </div>
     </div>
     <div class="card-footer">
@@ -79,3 +79,9 @@ export default {
     }
 };
 </script>
+<style scoped lang="scss">
+.dit__label {
+    font-weight: 600;
+}
+
+</style>

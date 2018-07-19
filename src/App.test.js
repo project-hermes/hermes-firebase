@@ -1,21 +1,14 @@
-import Vue from 'vue';
 import App from './App.vue';
-
+import {shallowMount} from '@vue/test-utils';
 describe('App', () => {
-    let component, vm;
+    let component;
     beforeEach(() => {
-        const routerView = {
-            name: 'router-view',
-            render: h => h('div')
-        };
-
-        Vue.component('router-view', routerView);
-
-        component = Vue.extend(App);
-        vm = new component().$mount();
+        component = shallowMount(App, {
+            stubs: ['router-view']
+        });
     });
 
     test('it should exist', () => {
-        expect(vm).toBeDefined();
+        expect(component.exists()).toEqual(true);
     });
 });

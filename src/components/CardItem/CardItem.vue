@@ -5,6 +5,9 @@
     <slot />
   </div>
 </template>
+<script>
+export default {};
+</script>
 <style lang="scss" scoped>
 .card {
     padding: 1em;
