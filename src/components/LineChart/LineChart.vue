@@ -8,7 +8,9 @@ export default {
     props: {
         chartData: {
             type: Object,
-            default: undefined
+            default: () => ({
+                series: []
+            })
         }
     },
     watch: {

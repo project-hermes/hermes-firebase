@@ -25,8 +25,7 @@
     </div>
     <div
       :class="{'is-active': isToggled}"
-      class="navbar-menu"
-    >
+      class="navbar-menu">
       <div class="navbar-start">
         <router-link
           :to="{name: 'dives'}"
@@ -40,7 +39,6 @@
         <UserButton class="navbar-item is-hidden-touch" />
       </div>
     </div>
-
   </nav>
 </template>
 <script>
@@ -73,14 +71,4 @@ export default {
     margin-right: 8px;
     vertical-align: middle;
 }
-
-// .navbar-brand {
-//     display: flex;
-//     justify-content: space-between;
-//     width: 100%;
-// }
-//
-// .user-button {
-//     flex: none;
-// }
 </style>

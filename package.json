@@ -1,95 +1,109 @@
 {
-  "name": "hermes-firebase",
-  "version": "1.0.0",
-  "description": "[![Join the chat at https://gitter.im/hermes-firebase/Lobby](https://badges.gitter.im/hermes-firebase/Lobby.svg)](https://gitter.im/hermes-firebase/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/sonyccd/hermes-firebase.svg?branch=master)](https://travis-ci.org/sonyccd/hermes-firebase) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dd6fcab8566444d486ccb79b8ec91494)](https://app.codacy.com/app/sonyccd/hermes-firebase?utm_source=github.com&utm_medium=referral&utm_content=sonyccd/hermes-firebase&utm_campaign=badger) [![Dependencies](https://david-dm.org/sonyccd/hermes-firebase.svg)](https://david-dm.org/sonyccd/hermes-firebase)",
-  "main": "index.js",
-  "scripts": {
-    "build": "webpack --config ./webpack.dev.js",
-    "build:watch": "webpack --config ./webpack.dev.js  --watch",
-    "build:prod": "webpack --config ./webpack.prod.js",
-    "lint": "eslint src --fix --ext .vue",
-    "start:dev": "webpack-dev-server --config ./webpack.dev.js --watch --hot --open",
-    "test": "NODE_ENV=test ./node_modules/.bin/jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/project-hermes/hermes-firebase.git"
-  },
-  "author": "Project Hermes",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/project-hermes/hermes-firebase/issues"
-  },
-  "homepage": "https://github.com/project-hermes/hermes-firebase#readme",
-  "dependencies": {
-    "bulma": "^0.7.1",
-    "element-ui": "^2.3.8",
-    "firebase": "^5.0.3",
-    "highcharts": "^6.1.0",
-    "leaflet": "^1.3.1",
-    "leaflet-geosearch": "^2.6.0",
-    "lodash": "^4.17.10",
-    "vue": "^2.5.16",
-    "vue-feather-icons": "^4.7.1",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@vue/eslint-config-standard": "^3.0.0-beta.11",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "babel": "^6.23.0",
-    "babel-jest": "^23.4.0",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-component": "^1.1.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "clean-webpack-plugin": "^0.1.19",
-    "css-loader": "^0.28.11",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-jest": "^21.18.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-vue": "^4.5.0",
-    "file-loader": "^1.1.11",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "jest": "^23.4.1",
-    "jest-vue-preprocessor": "^1.4.0",
-    "mini-css-extract-plugin": "^0.4.0",
-    "node-sass": "^4.9.0",
-    "prettier": "^1.12.1",
-    "sass-loader": "^7.0.2",
-    "style-loader": "^0.21.0",
-    "uglifyjs-webpack-plugin": "^1.2.5",
-    "vue-jest": "^2.6.0",
-    "vue-loader": "^15.0.9",
-    "vue-style-loader": "^4.1.0",
-    "vue-template-compiler": "^2.5.16",
-    "vue-test-utils": "^1.0.0-beta.11",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3",
-    "webpack-dev-server": "^3.1.4",
-    "webpack-merge": "^4.1.2"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^vue$": "vue/dist/vue.common.js"
+    "name": "hermes-firebase",
+    "version": "1.0.0",
+    "description": "[![Join the chat at https://gitter.im/hermes-firebase/Lobby](https://badges.gitter.im/hermes-firebase/Lobby.svg)](https://gitter.im/hermes-firebase/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/sonyccd/hermes-firebase.svg?branch=master)](https://travis-ci.org/sonyccd/hermes-firebase) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dd6fcab8566444d486ccb79b8ec91494)](https://app.codacy.com/app/sonyccd/hermes-firebase?utm_source=github.com&utm_medium=referral&utm_content=sonyccd/hermes-firebase&utm_campaign=badger) [![Dependencies](https://david-dm.org/sonyccd/hermes-firebase.svg)](https://david-dm.org/sonyccd/hermes-firebase)",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack --config ./webpack.dev.js",
+        "build:watch": "webpack --config ./webpack.dev.js  --watch",
+        "build:prod": "webpack --config ./webpack.prod.js",
+        "lint": "eslint src --fix --ext .vue",
+        "start:dev": "webpack-dev-server --config ./webpack.dev.js --watch --hot --open",
+        "test": "NODE_ENV=test ./node_modules/.bin/jest"
     },
-    "moduleFileExtensions": [
-      "js",
-      "vue"
-    ],
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
-    }
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/project-hermes/hermes-firebase.git"
+    },
+    "author": "Project Hermes",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/project-hermes/hermes-firebase/issues"
+    },
+    "homepage": "https://github.com/project-hermes/hermes-firebase#readme",
+    "dependencies": {
+        "bulma": "^0.7.1",
+        "element-ui": "^2.3.8",
+        "firebase": "^5.0.3",
+        "highcharts": "^6.1.0",
+        "leaflet": "^1.3.1",
+        "leaflet-geosearch": "^2.6.0",
+        "lodash": "^4.17.10",
+        "vue": "^2.5.16",
+        "vue-feather-icons": "^4.7.1",
+        "vue-router": "^3.0.1",
+        "vuex": "^3.0.1"
+    },
+    "devDependencies": {
+        "@vue/eslint-config-standard": "^3.0.0-beta.11",
+        "@vue/server-test-utils": "^1.0.0-beta.20",
+        "@vue/test-utils": "^1.0.0-beta.20",
+        "babel": "^6.23.0",
+        "babel-jest": "^23.4.0",
+        "babel-loader": "^7.1.4",
+        "babel-plugin-component": "^1.1.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "clean-webpack-plugin": "^0.1.19",
+        "css-loader": "^0.28.11",
+        "eslint": "^4.19.1",
+        "eslint-config-prettier": "^2.9.0",
+        "eslint-plugin-jest": "^21.18.0",
+        "eslint-plugin-prettier": "^2.6.0",
+        "eslint-plugin-promise": "^3.8.0",
+        "eslint-plugin-vue": "^4.5.0",
+        "file-loader": "^1.1.11",
+        "html-loader": "^0.5.5",
+        "html-webpack-plugin": "^3.2.0",
+        "jest": "^23.4.1",
+        "jest-vue-preprocessor": "^1.4.0",
+        "mini-css-extract-plugin": "^0.4.0",
+        "node-sass": "^4.9.0",
+        "prettier": "^1.12.1",
+        "sass-loader": "^7.0.2",
+        "style-loader": "^0.21.0",
+        "uglifyjs-webpack-plugin": "^1.2.5",
+        "vue-jest": "^2.6.0",
+        "vue-loader": "^15.0.9",
+        "vue-style-loader": "^4.1.0",
+        "vue-template-compiler": "^2.5.16",
+        "vue-test-utils": "^1.0.0-beta.11",
+        "webpack": "^4.8.3",
+        "webpack-cli": "^2.1.3",
+        "webpack-dev-server": "^3.1.4",
+        "webpack-merge": "^4.1.2"
+    },
+    "jest": {
+        "moduleNameMapper": {
+            "~(.*)$": "<rootDir>/src/$1",
+            "^vue$": "vue/dist/vue.common.js",
+            "highcharts": "<rootDir>/src/mocks/highcharts.js",
+            "vue-feather-icons/.*": "<rootDir>/src/mocks/vue-feather-icons.js"
+        },
+        "moduleFileExtensions": [
+            "js",
+            "vue"
+        ],
+        "transform": {
+            "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+            ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
+        }
     },
     "babel": {
         "env": {
             "test": {
                 "presets": [
-                    ["env", { "targets": { "node": "current" }}]
+                    [
+                        "env",
+                        {
+                            "targets": {
+                                "node": "current"
+                            }
+                        }
+                    ]
+                ],
+                "plugins": [
+                    "transform-object-rest-spread"
                 ]
             }
         }
