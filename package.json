@@ -78,6 +78,7 @@
             "~(.*)$": "<rootDir>/src/$1",
             "^vue$": "vue/dist/vue.common.js",
             "highcharts": "<rootDir>/src/mocks/highcharts.js",
+            "leaflet": "<rootDir>/src/mocks/leaflet.js",
             "vue-feather-icons/.*": "<rootDir>/src/mocks/vue-feather-icons.js"
         },
         "moduleFileExtensions": [
