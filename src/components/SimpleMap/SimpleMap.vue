@@ -43,7 +43,7 @@ export default {
     },
     mounted() {
         this.initMap();
-        this.map.setView([0, 0], 2);
+        this.map.setView([0, 0], 3);
         if (this.markers.length) {
             this.replaceMarkers(this.markers);
         }
