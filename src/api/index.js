@@ -1,12 +1,19 @@
 import isArray from 'lodash/isArray';
 import {db} from '~/firebase';
 
-export function fetchDives({orderBy, limit} = {}) {
+export function fetchDives({orderBy, limit, from, to} = {}) {
     let query = db.collection('Dive');
+
     query = orderBy
         ? query.orderBy(...(isArray(orderBy) ? orderBy : [orderBy]))
         : query;
+
     query = limit ? query.limit(limit) : query;
+
+    if (from && to) {
+        query = query.where('timeStart', '>', from).where('timeStart', '<', to);
+    }
+
     return query.get();
 }
 
