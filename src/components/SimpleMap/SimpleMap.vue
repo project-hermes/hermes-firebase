@@ -43,7 +43,7 @@ export default {
     },
     mounted() {
         this.initMap();
-        this.map.setView([0, 0], 3);
+        this.map.setView([15, 0], 3);
         if (this.markers.length) {
             this.replaceMarkers(this.markers);
         }
@@ -131,7 +131,7 @@ export default {
                 const {lat, lng} = head(newMarkers);
                 this.map.setView([lat, lng], this.getDefaultZoom());
             } else if (this.view === 'global') {
-                this.map.setView([0, 0], this.getDefaultZoom());
+                this.map.setView([15, 0], this.getDefaultZoom());
             }
 
             this.currentMarkers = this.addMarkers(this.map, newMarkers);
