@@ -16,10 +16,12 @@ L.Icon.Default.mergeOptions({
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-geosearch/dist/style.css';
 
-import {DatePicker, Loading} from 'element-ui';
+import {DatePicker, Loading, Select, Option} from 'element-ui';
 
 Vue.use(DatePicker);
 Vue.use(Loading);
+Vue.use(Select);
+Vue.use(Option);
 
 locale.use(lang);
 Vue.prototype.$ELEMENT = {locale};

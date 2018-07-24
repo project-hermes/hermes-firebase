@@ -2,19 +2,22 @@
   <div class="demo">
     <main class="demo__main">
       <div class="container">
-        <el-date-picker
+        <RangePicker
           v-model="value"
-          type="date"
-          placeholder="Pick a day"/>
+        />
       </div>
     </main>
   </div>
 </template>
 <script>
+import {RangePicker} from '~/components';
 export default {
+    components: {
+        RangePicker
+    },
     data() {
         return {
-            value: ''
+            value: 50
         };
     }
 };
