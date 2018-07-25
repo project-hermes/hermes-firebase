@@ -2,22 +2,25 @@
   <div class="demo">
     <main class="demo__main">
       <div class="container">
-        <RangePicker
-          v-model="value"
-        />
+        <CoordinatePicker v-model="value"/>
       </div>
+      <div>{{ value }}</div>
     </main>
   </div>
 </template>
 <script>
-import {RangePicker} from '~/components';
+import {RangePicker, CoordinatePicker} from '~/components';
 export default {
     components: {
-        RangePicker
+        RangePicker,
+        CoordinatePicker
     },
     data() {
         return {
-            value: 50
+            value: {
+                coordinates: undefined,
+                range: 500
+            }
         };
     }
 };

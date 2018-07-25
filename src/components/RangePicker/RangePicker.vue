@@ -47,8 +47,9 @@ export default {
     },
     methods: {
         onSelect(value) {
-            if (isFinite(value)) {
-                this.$emit('input', value);
+            const numberValue = +value;
+            if (isFinite(numberValue)) {
+                this.$emit('input', numberValue);
             }
         }
     }
