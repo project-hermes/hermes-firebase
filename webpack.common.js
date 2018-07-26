@@ -49,7 +49,7 @@ module.exports = {
                 test: /\.(sass|scss|css)$/,
                 use: [
                     'vue-style-loader',
-                    // MiniCssExtractPlugin.loader,
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
                     {
                         loader: 'sass-loader',
