@@ -1,20 +1,24 @@
 <template>
-  <div class="map__container">
-    <SimpleMap
-      v-model="selectedDiveId"
-      :markers="mapMarkers"
-      view="global"
-      class="map__map"
-    />
+  <div class="main-view">
+    <div
+      :class="{'main-view__details__open': selectedDiveId}"
+      class="main-view__map-wrapper">
+      <SimpleMap
+        v-model="selectedDiveId"
+        :markers="mapMarkers"
+        view="global"
+        class="main-view__map"
+      />
+    </div>
     <DiveInfoTable
       v-if="selectedDive"
       :dive="selectedDive"
-      class="map__details"
+      class="main-view__details"
     >
       <router-link
         slot="footer"
         :to="diveRoute"
-        class="map__details-button button is-text">
+        class="main-view__details-button button is-text">
         <BarChartIcon />
         See Data
       </router-link>
@@ -80,9 +84,6 @@ export default {
             }
         }).then(dives => {
             this.mapMarkers = this.createMapMarkers(dives);
-            if (this.$route.query.diveId) {
-                // this.selectedDiveId = this.$route.query.diveId;
-            }
         });
     },
     methods: {
@@ -107,28 +108,29 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.map__container,
-.map__map {
+.main-view,
+.main-view__map-wrapper,
+.main-view__map {
     height: 100%;
 }
 
-.map__details {
+.main-view__details {
     position: absolute;
     z-index: 499;
     right: 1rem;
     top: calc(52px + 1rem);
 }
 
-.map__details-button {
+.main-view__details-button {
     width: 100%;
 }
 
 @media all and (max-width: 768px) {
-    .map__map {
-        height: 65%;
+    .main-view__details__open {
+        height: calc(100% - 38px - 48px); // height of card header + footer
     }
 
-    .map__details {
+    .main-view__details {
         position: relative;
         top: 0;
         right: 0;
