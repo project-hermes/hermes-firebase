@@ -2,14 +2,21 @@
   <div class="dive-list">
     <section class="section">
       <div class="container">
-        <el-date-picker
-          v-model="dateRange"
-          class="dive-list__date-picker"
-          type="daterange"
-          range-separator="To"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-          @change="onNewDateRange" />
+        <div class="level">
+          <CoordinatePicker
+            v-model="coords"
+            @change="fetchFilteredDives"/>
+          <el-date-picker
+            v-model="dateRange"
+            class="dive-list__date-picker"
+            type="daterange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            align="right"
+            @change="fetchFilteredDives" />
+
+        </div>
       </div>
     </section>
     <section
@@ -40,13 +47,14 @@
 </template>
 <script>
 import sortBy from 'lodash/sortBy';
-import {CardItem, DiveInfoTable} from '~/components';
+import {CardItem, DiveInfoTable, CoordinatePicker} from '~/components';
 import {mapActions} from 'vuex';
 
 export default {
     components: {
         CardItem,
-        DiveInfoTable
+        DiveInfoTable,
+        CoordinatePicker
     },
     data() {
         return {
@@ -57,7 +65,8 @@ export default {
                 'Sample Count': 'sampleCount'
             },
             isLoading: true,
-            dateRange: ''
+            dateRange: null,
+            coords: null
         };
     },
     computed: {
@@ -94,10 +103,11 @@ export default {
                 this.isLoading = false;
             });
         },
-        onNewDateRange([from, to] = []) {
+        fetchFilteredDives() {
+            const [from, to] = this.dateRange || [];
             this.fetchDives({
-                from,
-                to
+                coordinates: this.coords,
+                dateRange: {from, to}
             });
         }
     }

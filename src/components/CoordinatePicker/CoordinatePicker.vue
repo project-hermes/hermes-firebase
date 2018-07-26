@@ -12,7 +12,7 @@
           :class="{'is-danger': coordinates.length && !validCoordinates}"
           class="input"
           type="text"
-          placeholder="Coordinates (ex. 35.78022, -78.639)">
+          placeholder="35.78022, -78.639">
       </p>
       <p class="control">
         <a
@@ -41,7 +41,7 @@ export default {
     props: {
         value: {
             type: Object,
-            required: true
+            default: () => ({})
         }
     },
     data() {
@@ -68,7 +68,7 @@ export default {
     },
     methods: {
         setValues({range, latitude, longitude}) {
-            this.range = range;
+            this.range = range || 50;
             this.coordinates =
                 latitude && longitude ? `${latitude}, ${longitude}` : '';
         },
@@ -97,10 +97,6 @@ export default {
     .input,
     .button {
         height: 40px;
-    }
-
-    .input {
-        width: 300px;
     }
 }
 
