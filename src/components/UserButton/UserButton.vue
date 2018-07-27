@@ -1,12 +1,13 @@
 <template>
-  <div class="user-button">
+  <div
+    class="user-button">
     <div
       :class="{'is-active': isActive}"
       tabindex="0"
       class="dropdown is-right"
       @click="toggle"
-      @blur="toggleOff"
-    >
+      @blur="toggle(false)"
+      @keyup.enter="toggle">
       <div class="dropdown-trigger">
         <img
           v-if="user.photoURL"
@@ -37,8 +38,10 @@
           <hr class="dropdown-divider">
           <a
             class="dropdown-item"
+            tabindex="0"
+            @blur="toggle(false)"
             @click="signOut"
-          >
+            @keyup.enter="signOut">
             Sign out
           </a>
         </div>
@@ -49,6 +52,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import UserIcon from 'vue-feather-icons/icons/UserIcon';
+import isUndefined from 'lodash/isUndefined';
 
 export default {
     components: {
@@ -68,11 +72,8 @@ export default {
         ...mapActions({
             signOut: 'auth/signOut'
         }),
-        toggle() {
-            this.isActive = !this.isActive;
-        },
-        toggleOff() {
-            this.isActive = false;
+        toggle(override) {
+            this.isActive = isUndefined(override) ? !this.isActive : override;
         }
     }
 };
@@ -99,6 +100,6 @@ export default {
 
 .dropdown,
 .dropdown-menu {
-    outline: none;
+    // outline: none;
 }
 </style>
