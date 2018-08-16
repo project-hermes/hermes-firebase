@@ -3,6 +3,7 @@ const {VueLoaderPlugin} = require('vue-loader');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
 module.exports = {
     entry: ['./src/app.js'],
@@ -49,7 +50,7 @@ module.exports = {
                 test: /\.(sass|scss|css)$/,
                 use: [
                     'vue-style-loader',
-                    MiniCssExtractPlugin.loader,
+                    // MiniCssExtractPlugin.loader,
                     'css-loader',
                     {
                         loader: 'sass-loader',
@@ -80,11 +81,14 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['public']),
         new HtmlWebpackPlugin({
+            inlineSource: '.(js|css)$',
             template: './src/index.html'
         }),
-        new MiniCssExtractPlugin({
-            filename: 'style.[contenthash].css'
-        }),
+
+        new HtmlWebpackInlineSourcePlugin(),
+        // new MiniCssExtractPlugin({
+        //     filename: 'style.[contenthash].css'
+        // }),
         new VueLoaderPlugin()
     ]
 };
