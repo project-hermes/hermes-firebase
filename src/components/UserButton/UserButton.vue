@@ -40,6 +40,7 @@
             class="dropdown-item"
             tabindex="0"
             @blur="toggle(false)"
+            @focus="toggle(true)"
             @click="signOut"
             @keyup.enter="signOut">
             Sign out
