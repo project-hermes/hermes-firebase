@@ -4,6 +4,7 @@
 
 <script>
 import L from 'leaflet';
+import IconSvg from 'leaflet/src/images/marker.svg';
 import head from 'lodash/head';
 // import {GeoSearchControl, OpenStreetMapProvider} from 'leaflet-geosearch';
 
@@ -109,7 +110,8 @@ export default {
         addMarkers(map, markerConfigs) {
             return markerConfigs.map(config => {
                 const {lat, lng, popupTemplate, id} = config;
-                let marker = L.marker([lat, lng])
+                let marker = L.marker([lat, lng], {
+                })
                     .addTo(map)
                     .on('click', () => {
                         this.$nextTick(() => {

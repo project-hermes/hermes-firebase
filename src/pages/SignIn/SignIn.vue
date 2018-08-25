@@ -1,75 +1,75 @@
 <template>
   <main>
-    <section class="hero">
-      <div class="hero-body">
-        <div class="container has-text-centered">
-          <h1 class="title is-2">
-            Project Hermes
-          </h1>
-        </div>
-      </div>
-    </section>
     <div
       class="columns is-centered">
-      <div class="column is-3">
-        <div class="google-button-container">
-          <button
-            class="google-button"
-            @click="signInWithGoogle">
-            <img
-              :src="googleButton"
-              alt="Google logo"
-              class="google-logo" >
-            <span class="google-text">Sign in with Google</span>
-          </button>
-        </div>
-        <div class="email-form">
-          <form @submit.prevent="signInWithEmailAndPassword()">
-            <div class="field">
-              <label class="label">Email</label>
-              <p class="control has-icons-left">
-                <input
-                  v-model="email"
-                  class="input"
-                  type="email"
-                  placeholder="Email">
-                <span class="icon is-small is-left">
-                  <MailIcon />
-                </span>
-              </p>
+      <div class="column is-4">
+        <div class="card">
+          <div class="card-content">
+            <div class="has-text-centered">
+              <h1 class="title is-2">
+                Project Hermes
+              </h1>
             </div>
-            <div class="field password-field">
-              <label class="label">Password</label>
-              <p class="control has-icons-left">
-                <input
-                  v-model="password"
-                  class="input"
-                  type="password"
-                  placeholder="Password">
-                <span class="icon is-small is-left">
-                  <LockIcon />
-                </span>
-              </p>
-              <p class="help is-pulled-right sign-up">
-                <a
-                  class="button is-text is-small"
-                  @click="signUp">
-                  Sign Up
-                </a>
-              </p>
+            <div class="google-button-container">
+              <button
+                class="google-button"
+                @click="signInWithGoogle">
+                <img
+                  :src="googleButton"
+                  alt="Google logo"
+                  class="google-logo" >
+                <span class="google-text">Sign in with Google</span>
+              </button>
             </div>
-            <div class="field">
-              <p class="control">
-                <button
-                  class="button is-link">
-                  Login
-                </button>
-              </p>
-              <p class="help is-danger">
-                {{ error }}
-              </p>
+            <div class="email-form">
+              <form @submit.prevent="signInWithEmailAndPassword()">
+                <div class="field">
+                  <label class="label">Email</label>
+                  <p class="control has-icons-left">
+                    <input
+                      v-model="email"
+                      class="input"
+                      type="email"
+                      placeholder="Email">
+                    <span class="icon is-small is-left">
+                      <MailIcon />
+                    </span>
+                  </p>
+                </div>
+                <div class="field password-field">
+                  <label class="label">Password</label>
+                  <p class="control has-icons-left">
+                    <input
+                      v-model="password"
+                      class="input"
+                      type="password"
+                      placeholder="Password">
+                    <span class="icon is-small is-left">
+                      <LockIcon />
+                    </span>
+                  </p>
+                  <p class="help is-pulled-right sign-up">
+                    <a
+                      class="button is-text is-small"
+                      @click="signUp">
+                      Sign Up
+                    </a>
+                  </p>
+                </div>
+                <div class="field">
+                  <p class="control">
+                    <button
+                      class="button is-link">
+                      Login
+                    </button>
+                  </p>
+                  <p class="help is-danger">
+                    {{ error }}
+                  </p>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -128,6 +128,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~/styles/vars.scss';
+
+.card {
+    margin-top: 3rem;
+}
 
 .title {
     color: $mainBlue;

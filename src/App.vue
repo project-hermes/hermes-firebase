@@ -11,6 +11,7 @@ export default {
 </script>
 <style lang="scss">
 @import '~/styles/vars.scss';
+$primary: $mainBlue;
 $navbar-z: 1001;
 $navbar-item-color: $mainBlue;
 // $navbar-burger-color: $mainBlue;

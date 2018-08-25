@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar has-shadow">
+  <nav class="navbar is-white has-shadow">
     <div class="navbar-brand">
       <div class="navbar-item">
         <router-link :to="{name: 'main'}">
@@ -67,6 +67,12 @@ export default {
 
 .navbar {
     opacity: 0.9;
+
+    &.is-white .navbar-start .navbar-item,
+    &.is-white .navbar-start .navbar-item.is-active,
+    &.is-white .navbar-start .navbar-item:hover {
+        color: $mainBlue;
+    }
 }
 
 .navbar-brand {
