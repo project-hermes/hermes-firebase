@@ -1,12 +1,11 @@
 <template>
   <main>
-    <section class="hero is-dark is-bold">
+    <section class="hero">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <h1 class="title">
+          <h1 class="title is-2">
             Project Hermes
           </h1>
-          <h2 class="subtitle"/>
         </div>
       </div>
     </section>
@@ -128,6 +127,34 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import '~/styles/vars.scss';
+
+.title {
+    color: $mainBlue;
+
+    background: -webkit-linear-gradient(
+        60deg,
+        $softestBlue,
+        $mainBlue,
+        $softBlue
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 1800% 1800%;
+    animation: flow 20s ease infinite;
+}
+@keyframes flow {
+    0% {
+        background-position: 0% 82%;
+    }
+    50% {
+        background-position: 100% 19%;
+    }
+    100% {
+        background-position: 0% 82%;
+    }
+}
+
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px white inset;
 }

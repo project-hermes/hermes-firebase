@@ -3,9 +3,7 @@
     class="app__view">
     <NavBar
       v-if="isAuthorized"/>
-    <main class="app__main">
-      <router-view/>
-    </main>
+      <router-view class="app__main" />
   </div>
 </template>
 
@@ -26,7 +24,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'bulma/bulma.sass';
 body {
     margin: 0;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -38,10 +35,20 @@ html,
 #app,
 .app__view {
     height: 100%;
+
+    .navbar {
+        // opacity: 0.9;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .app__main {
+        padding-top: 52px;
+        height: 100%;
+        overflow-y: auto;
+    }
 }
 
-.app__main {
-    height: calc(100% - 52px);
-    overflow-y: auto;
-}
 </style>

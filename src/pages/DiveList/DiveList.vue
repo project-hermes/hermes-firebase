@@ -1,5 +1,5 @@
 <template>
-  <div class="dive-list">
+  <main class="dive-list">
     <section class="section">
       <div class="container">
         <div class="level">
@@ -43,7 +43,7 @@
         </h1>
       </div>
     </section>
-  </div>
+  </main>
 </template>
 <script>
 import sortBy from 'lodash/sortBy';

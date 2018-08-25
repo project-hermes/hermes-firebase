@@ -1,10 +1,10 @@
 <template>
-  <nav class="navbar is-dark">
+  <nav class="navbar has-shadow">
     <div class="navbar-brand">
       <div class="navbar-item">
         <router-link :to="{name: 'main'}">
           <a>
-            <h1 class="title has-text-white">
+            <h1 class="title">
               Project Hermes
             </h1>
           </a>
@@ -13,7 +13,7 @@
       <a
         :class="{'is-active': isToggled}"
         role="button"
-        class="navbar-burger has-text-white"
+        class="navbar-burger"
         aria-label="menu"
         aria-expanded="false"
         @click="toggle()">
@@ -63,12 +63,43 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import '~/styles/vars.scss';
+
 .navbar {
-    z-index: 500; // to beat leaflet
+    opacity: 0.9;
+}
+
+.navbar-brand {
+    .title {
+        color: $mainBlue;
+
+        background: -webkit-linear-gradient(
+            60deg,
+            $softestBlue,
+            $mainBlue,
+            $softBlue,
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 1800% 1800%;
+        animation: flow 20s ease infinite;
+    }
 }
 
 .navbar__icon {
     margin-right: 8px;
     vertical-align: middle;
+}
+
+@keyframes flow {
+    0% {
+        background-position: 0% 82%;
+    }
+    50% {
+        background-position: 100% 19%;
+    }
+    100% {
+        background-position: 0% 82%;
+    }
 }
 </style>

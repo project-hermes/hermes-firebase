@@ -1,37 +1,41 @@
 <template>
-  <div class="main-view">
-    <div
-      :class="{'main-view__details__open': selectedDiveId}"
-      class="main-view__map-wrapper">
-      <SimpleMap
-        v-model="selectedDiveId"
-        :markers="mapMarkers"
-        view="global"
-        class="main-view__map"
-      />
-    </div>
-    <DiveInfoTable
-      v-if="selectedDive"
-      :dive="selectedDive"
-      class="main-view__details"
-    >
-      <router-link
-        slot="footer"
-        :to="diveRoute"
-        class="main-view__details-button button is-text">
-        <BarChartIcon />
-        See Data
-      </router-link>
-    </DiveInfoTable>
-  </div>
+    <main class="main-view">
+        <!-- <NavBar class="main-view__nav"/> -->
+        <div class="main-view__map-wrapper">
+          <div
+            :class="{'main-view__details__open': selectedDiveId}"
+            class="main-view__map-wrapper">
+            <SimpleMap
+              v-model="selectedDiveId"
+              :markers="mapMarkers"
+              view="global"
+              class="main-view__map"
+            />
+          </div>
+          <DiveInfoTable
+            v-if="selectedDive"
+            :dive="selectedDive"
+            class="main-view__details"
+          >
+            <router-link
+              slot="footer"
+              :to="diveRoute"
+              class="main-view__details-button button is-text">
+              <BarChartIcon />
+              See Data
+            </router-link>
+          </DiveInfoTable>
+        </div>
+    </main>
 </template>
 <script>
-import {SimpleMap, DiveInfoTable} from '~/components';
+import {NavBar, SimpleMap, DiveInfoTable} from '~/components';
 import {mapActions} from 'vuex';
 import BarChartIcon from 'vue-feather-icons/icons/BarChartIcon';
 
 export default {
     components: {
+        NavBar,
         SimpleMap,
         DiveInfoTable,
         BarChartIcon
@@ -108,10 +112,29 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.main-view,
-.main-view__map-wrapper,
-.main-view__map {
+.main-view {
     height: 100%;
+    padding-top: 0 !important;
+
+    &__nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        opacity: 0.9;
+    }
+
+    &__map-wrapper {
+        height: 100%;
+    }
+
+    &__map {
+        height: 100%;
+
+        /deep/ .leaflet-top {
+            top: 55px;
+        }
+    }
 }
 
 .main-view__details {

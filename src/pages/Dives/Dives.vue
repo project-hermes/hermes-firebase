@@ -1,5 +1,5 @@
 <template>
-  <div class="dives__main">
+  <main class="dives__main">
     <div class="dives__view columns is-variable is-1">
       <aside
         :class="{'is-hidden-mobile': !showDiveList, 'is-active': showDiveList}"
@@ -53,7 +53,7 @@
         <h1 class="title">Select a dive</h1>
       </section>
     </div>
-  </div>
+</main>
 </template>
 
 <script>

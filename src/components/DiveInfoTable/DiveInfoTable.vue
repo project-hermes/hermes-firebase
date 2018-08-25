@@ -80,6 +80,10 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.card {
+    opacity: 0.9;
+}
+
 .dit__label {
     font-weight: 600;
 }

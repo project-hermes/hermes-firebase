@@ -1,48 +1,51 @@
 <template>
-  <div class="dive-details container">
-    <div class="tile is-ancestor">
-      <div class="tile is-vertical">
-        <div class="tile">
-          <div class="tile is-6 is-vertical">
-            <div class="tile is-parent">
+  <main>
+    <div class="dive-details container">
+      <div class="tile is-ancestor">
+        <div class="tile is-vertical">
+          <div class="tile">
+            <div class="tile is-6 is-vertical">
+              <div class="tile is-parent">
+                <div
+                  v-loading="diveLoading"
+                  class="tile is-child card">
+                  <DiveInfoTable
+                    :dive="dive"/>
+                </div>
+              </div>
+              <div class="tile is-parent">
+                <div
+                  v-loading="dataLoading"
+                  class="tile is-child card" >
+                  <DiveAnalyticsTable
+                    :analytics="diveAnalytics" />
+                </div>
+              </div>
+            </div>
+            <div class="tile is-6 is-parent">
               <div
                 v-loading="diveLoading"
-                class="tile is-child card">
-                <DiveInfoTable
-                  :dive="dive"/>
-              </div>
-            </div>
-            <div class="tile is-parent">
-              <div
-                v-loading="dataLoading"
-                class="tile is-child card" >
-                <DiveAnalyticsTable
-                  :analytics="diveAnalytics" />
+                class="tile is-child">
+                <SimpleMap
+                  :markers="mapMarkers"
+                  :disable-scroll="true"
+                  style="height: 550px;"
+                />
               </div>
             </div>
           </div>
-          <div class="tile is-6 is-parent">
+          <div class="tile is-parent">
             <div
-              v-loading="diveLoading"
-              class="tile is-child">
-              <SimpleMap
-                :markers="mapMarkers"
-                style="height: 550px;"
-              />
+              v-loading="dataLoading"
+              class="tile is-child card">
+              <LineChart
+                :chart-data="chartData" />
             </div>
-          </div>
-        </div>
-        <div class="tile is-parent">
-          <div
-            v-loading="dataLoading"
-            class="tile is-child card">
-            <LineChart
-              :chart-data="chartData" />
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -209,7 +212,8 @@ export default {
                         yAxis: 0,
                         tooltip: {
                             valueSuffix: ' °C'
-                        }
+                        },
+                        color: '#FFFD98'
                     },
                     {
                         type: 'spline',
@@ -218,7 +222,8 @@ export default {
                         yAxis: 0,
                         tooltip: {
                             valueSuffix: ' °C'
-                        }
+                        },
+                        color: '#000'
                     },
                     {
                         type: 'spline',
@@ -227,7 +232,8 @@ export default {
                         yAxis: 1,
                         tooltip: {
                             valueSuffix: ' cm'
-                        }
+                        },
+                        color: '#7798FF'
                     }
                 ]
             };

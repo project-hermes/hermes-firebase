@@ -10,11 +10,23 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '~/styles/vars.scss';
+$navbar-z: 1001;
+$navbar-item-color: $mainBlue;
+// $navbar-burger-color: $mainBlue;
+$navbar-item-hover-color: $mainBlue;
+// $navbar-item-active-color: $darkOcean;
+$navbar-box-shadow-color: rgba(0, 0, 0, 0.75);
+$navbar-box-shadow-size: 0px 3px 20px -10px;
 @import 'bulma/bulma.sass';
+
 body {
     margin: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-overflow-scrolling: touch;
+}
+
+* {
+    font-family: 'Lato', sans-serif;
 }
 
 body,

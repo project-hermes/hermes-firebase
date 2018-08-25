@@ -20,6 +20,10 @@ export default {
         view: {
             type: String,
             default: 'local'
+        },
+        disableScroll: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -79,7 +83,7 @@ export default {
                 }
             ).addTo(this.map);
 
-            this.map.scrollWheelZoom.disable();
+            this.disableScroll && this.map.scrollWheelZoom.disable();
 
             // var bounds = [[54.559322, -5.767822], [56.1210604, -3.021240]];
             // // create an orange rectangle
