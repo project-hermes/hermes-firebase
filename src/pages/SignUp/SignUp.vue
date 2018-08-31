@@ -131,6 +131,13 @@ export default {
     margin-top: 3rem;
 }
 
+@media all and (max-width: 768px) {
+    .card {
+        box-shadow: none;
+        border: none;
+    }
+}
+
 .title {
     color: $mainBlue;
 
