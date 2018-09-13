@@ -3,18 +3,21 @@
     class="user-button">
     <div
       :class="{'is-active': isActive}"
-      tabindex="0"
       class="dropdown is-right"
-      @click="toggle"
-      @blur="toggle(false)"
-      @keyup.enter="toggle">
-      <div class="dropdown-trigger">
+    >
+      <div
+        class="dropdown-trigger"
+        tabindex="0"
+        @click="toggle"
+        @blur="toggle(false)"
+        @keyup.enter="toggle"
+      >
         <img
           v-if="user.photoURL"
           :src="user.photoURL"
           class="user-button__icon"
           aria-haspopup="true"
-          aria-controls="dropdown-menu2">
+          aria-controls="dropdown-menu  ">
         <div
           v-else
           class="user-button__icon">
@@ -86,12 +89,19 @@ export default {
 }
 
 .user-button__icon {
+    // transition: transform 200ms, box-shadow 200ms;
+    // position: relative;
     border-radius: 50%;
     cursor: pointer;
     height: 28px;
     width: 28px;
     color: #363636;
     background-color: whitesmoke;
+
+    // &:hover {
+    //     transform: translateY(-1px);
+    //     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+    // }
 
     > svg {
         height: 28px;
