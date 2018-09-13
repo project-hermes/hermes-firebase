@@ -27,7 +27,7 @@ body {
 }
 
 * {
-    font-family: 'Lato', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body,
