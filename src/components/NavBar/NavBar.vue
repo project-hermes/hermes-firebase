@@ -27,13 +27,13 @@
       :class="{'is-active': isToggled}"
       class="navbar-menu">
       <div class="navbar-start">
-        <router-link
+        <!-- <router-link
           :to="{name: 'dives'}"
           :class="{'is-active': $route.name === 'dives'}"
           class="navbar-item">
           <ListIcon class="navbar__icon" />
           Dives
-        </router-link>
+        </router-link> -->
       </div>
       <div class="navbar-end">
         <UserButton class="navbar-item is-hidden-touch" />
