@@ -9,8 +9,8 @@ import {
     SignIn,
     NavView,
     SignUp,
-    MainView,
-    DiveDetails
+    DiveDetails,
+    UploadView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -45,7 +45,7 @@ const router = new VueRouter({
                 {
                     path: '/',
                     name: 'main',
-                    component: MainView
+                    component: UploadView
                 },
                 {
                     path: '/quick',

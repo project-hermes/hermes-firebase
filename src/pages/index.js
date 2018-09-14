@@ -8,3 +8,4 @@ export {default as SignIn} from './SignIn/SignIn.vue';
 export {default as NavView} from './NavView/NavView.vue';
 export {default as DiveList} from './DiveList/DiveList.vue';
 export {default as DiveDetails} from './DiveDetails/DiveDetails.vue';
+export {default as UploadView} from './UploadView/UploadView.vue';
