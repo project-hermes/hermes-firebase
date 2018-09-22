@@ -4,6 +4,7 @@ import config from './firebase-config';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/storage';
 
 import store from '~/store';
 import router from '~/router';
@@ -15,6 +16,8 @@ const settings = {
     timestampsInSnapshots: true
 };
 db.settings(settings);
+
+export default firebase;
 
 firebase.auth().onAuthStateChanged(user => {
     const currentUser = store.getters['auth/user'];

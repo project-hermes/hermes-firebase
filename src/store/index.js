@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {dives, nav, auth} from './modules';
+import {dives, nav, auth, upload} from './modules';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -8,6 +8,7 @@ export default new Vuex.Store({
     modules: {
         dives,
         nav,
-        auth
+        auth,
+        upload
     }
 });
